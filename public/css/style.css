@@ -67,7 +67,7 @@ root {
 }
 
 #viewport-wrapper {
-    width: calc(100% - 220px);
+    width: 100%;
     height: calc(100% - 10px);
     margin: 5px auto;
     position: absolute;
