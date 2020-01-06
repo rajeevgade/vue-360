@@ -175,7 +175,8 @@ export default {
             this.redraw()
         },
         currentScale(value){
-            this.zoom(0)
+            //this.setZoom()
+            console.log(value)
         },
         isMenuOpen(value){
             if(value){
@@ -296,7 +297,7 @@ export default {
         setImage(){
             //this.showLoader()
             //this.resetPosition()
-            this.currentLeftPosition = this.currentTopPosition = 0
+            //this.currentLeftPosition = this.currentTopPosition = 0
             this.currentCanvasImage = new Image()
             this.currentCanvasImage.crossOrigin='anonymous'
             this.currentCanvasImage.src = this.currentImage
@@ -340,6 +341,7 @@ export default {
             //center image
             this.ctx.drawImage(this.currentCanvasImage, this.currentLeftPosition, this.currentTopPosition, this.currentCanvasImage.width, this.currentCanvasImage.height,
                       centerShift_x,centerShift_y,this.currentCanvasImage.width*ratio, this.currentCanvasImage.height*ratio);  
+
         },
         cropImage(){
             let croppedCanvas = this.canvas
@@ -412,9 +414,9 @@ export default {
         },
         doMoving(evt){
             
-            let pageX = evt.clientX
-
             if(this.movement){
+
+                let pageX = evt.clientX
                 console.log('do moving')
 
                 //this.changeImage(this.images[10]);
@@ -485,6 +487,7 @@ export default {
             this.movement = false
             this.movementStart = 0;
             this.$refs.viewport.style.cursor = 'grab';
+            //this.setZoom()
         },
         startDragging(evt){
             console.log('start dragging')
@@ -516,12 +519,28 @@ export default {
             //zoom on click
             //if (!this.dragged) this.zoom(evt.shiftKey ? -1 : 1 );
         },
+        setZoom(){
+            let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
+            this.ctx.translate(pt.x,pt.y);
+            let factor = Math.pow(1.01,this.currentScale); 
+            this.ctx.scale(factor,factor);
+			this.ctx.translate(-pt.x,-pt.y);
+			this.redraw();
+        },
         zoom(clicks){
-            console.log(this.lastX + ' - ' + this.lastY)
+            //console.log(this.lastX + ' - ' + this.lastY)
             let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
 			this.ctx.translate(pt.x,pt.y);
             let factor = Math.pow(1.01,clicks);
             console.log(factor)
+
+            if(factor > 1){
+                this.currentScale += factor
+            }else{
+                this.currentScale -= factor
+            }
+            
+            console.log(this.currentScale)
 			this.ctx.scale(factor,factor);
 			this.ctx.translate(-pt.x,-pt.y);
 			this.redraw();
