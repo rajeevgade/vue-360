@@ -13,7 +13,17 @@
                     <div id="viewport-wrapper" ref="viewportWrapper">
                         <div class="viewport" ref="viewport">
                             <b-spinner style="width: 3rem; height: 3rem;" v-if="showSpinner"></b-spinner>
-                            <canvas class="image-container" ref="imageContainer" @mouseup="stopMoving" @mousedown="startMoving" @mousemove="doMoving" @wheel="zoomImage"></canvas>
+                            <canvas 
+                                class="image-container" 
+                                ref="imageContainer" 
+                                @mouseup="stopMoving" 
+                                @mousedown="startMoving" 
+                                @mousemove="doMoving" 
+                                @touchstart="touchStart"
+                                @touchend="touchEnd"
+                                @touchmove="touchMove"
+                                @wheel="zoomImage"
+                            ></canvas>
                             <div class="screen-toggle"></div>
                         </div>
                         <div id='drag-icon'></div>
@@ -270,8 +280,7 @@ export default {
             this.hideLoader()
         },
         resizeWindow(){
-            this.update()
-            this.setWindowSize()
+            this.setImage()
         },
         zoomIn(evt) {
             this.zoom(2)
@@ -297,7 +306,7 @@ export default {
         setImage(){
             //this.showLoader()
             //this.resetPosition()
-            //this.currentLeftPosition = this.currentTopPosition = 0
+            this.currentLeftPosition = this.currentTopPosition = 0
             this.currentCanvasImage = new Image()
             this.currentCanvasImage.crossOrigin='anonymous'
             this.currentCanvasImage.src = this.currentImage
@@ -324,9 +333,6 @@ export default {
         hideLoader(){
             this.$refs.imageContainer.style.display = 'block'
             this.showSpinner = false
-        },
-        setWindowSize(){
-            this.isMenuOpen = (window.innerWidth <= 700) ? false : true
         },
         redraw(){
             let p1 = this.ctx.transformedPoint(0,0);
@@ -403,6 +409,35 @@ export default {
             this.$refs.viewportWrapper.classList.add('wide');
             this.$refs.safety.classList.add('wide');
         },
+        onMove(pageX){
+            if (pageX - this.movementStart >= this.speedFactor) {
+                let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
+                //console.log(itemsSkippedRight)
+                this.movementStart = pageX;
+
+                if (this.spinReverse) {
+                    this.moveActiveIndexDown(itemsSkippedRight);
+                } else {
+                    this.moveActiveIndexUp(itemsSkippedRight);
+                }
+
+                this.redraw();
+
+            } else if (this.movementStart - pageX >= this.speedFactor) {
+
+                let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+                console.log(itemsSkippedLeft)
+                this.movementStart = pageX;
+
+                if (this.spinReverse) {
+                    this.moveActiveIndexUp(itemsSkippedLeft);
+                } else {
+                    this.moveActiveIndexDown(itemsSkippedLeft);
+                }
+
+                this.redraw();
+            }
+        },
         startMoving(evt){
             console.log('start moving')
             this.movement = true
@@ -410,39 +445,8 @@ export default {
             this.$refs.viewport.style.cursor = 'grabbing';
         },
         doMoving(evt){
-            
             if(this.movement){
-
-                let pageX = evt.clientX
-                console.log('do moving')
-                
-                if (pageX - this.movementStart >= this.speedFactor) {
-                    let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
-                    //console.log(itemsSkippedRight)
-                    this.movementStart = pageX;
-
-                    if (this.spinReverse) {
-                        this.moveActiveIndexDown(itemsSkippedRight);
-                    } else {
-                        this.moveActiveIndexUp(itemsSkippedRight);
-                    }
-
-                    this.redraw();
-
-                } else if (this.movementStart - pageX >= this.speedFactor) {
-
-                    let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
-                    console.log(itemsSkippedLeft)
-                    this.movementStart = pageX;
-
-                    if (this.spinReverse) {
-                        this.moveActiveIndexUp(itemsSkippedLeft);
-                    } else {
-                        this.moveActiveIndexDown(itemsSkippedLeft);
-                    }
-
-                    this.redraw();
-                }
+                this.onMove(evt.clientX)
             }
         },
         moveActiveIndexUp(itemsSkipped) {
@@ -475,7 +479,6 @@ export default {
                 }
             }
             
-            //this.changeImage(this.images[this.activeImage-1])
             this.update()
         },
         update() {
@@ -488,8 +491,17 @@ export default {
         stopMoving(evt){
             console.log('stop moving')
             this.movement = false
-            this.movementStart = 0;
-            this.$refs.viewport.style.cursor = 'grab';
+            this.movementStart = 0
+            this.$refs.viewport.style.cursor = 'grab'
+        },
+        touchStart(evt){
+            this.movementStart = evt.touches[0].clientX
+        },
+        touchMove(evt){
+            this.onMove(evt.touches[0].clientX)
+        },
+        touchEnd(){
+            this.movementStart = 0
         },
         startDragging(evt){
             console.log('start dragging')
