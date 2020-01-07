@@ -162,6 +162,7 @@ export default {
             stopAtEdges: false,
             imagesLoaded: false,
             loadedImages: 0,
+            imageData: [],
         }
     },
     watch: {
@@ -173,10 +174,6 @@ export default {
         },
         currentTopPosition(value){
             this.redraw()
-        },
-        currentScale(value){
-            //this.setZoom()
-            console.log(value)
         },
         isMenuOpen(value){
             if(value){
@@ -195,21 +192,21 @@ export default {
             }
         },
         viewPortElementWidth(value){
-            this.setImage()
+            this.update()
         }
     },
     mounted(){
         
         for(let i=1; i <= this.amount; i++){
-            this.images.push(`https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36/chair_${i}.jpg?v1`)
+            this.imageData.push(`https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36/chair_${i}.jpg?v1`)
         }
 
         this.initData()
     },
     methods: {
         initData(){
-            this.changeImage(this.images[0])
-
+            //this.changeImage(this.images[0])
+            this.loadInitialImage()
             this.preloadImages();
 
             this.canvas = this.$refs.imageContainer
@@ -218,11 +215,14 @@ export default {
             window.addEventListener('resize', this.resizeWindow);
             this.resizeWindow()
         },
+        loadInitialImage(){
+            this.changeImage(this.imageData[0])
+        },
         preloadImages(){
-            if (this.images.length) {
+            if (this.imageData.length) {
                 try {
-                    this.amount = this.images.length;
-                    this.images.forEach(src => {
+                    this.amount = this.imageData.length;
+                    this.imageData.forEach(src => {
                         this.addImage(src);
                     });
                 } catch (error) {
@@ -240,7 +240,7 @@ export default {
             image.onload = this.onImageLoad.bind(this);
             image.onerror = this.onImageLoad.bind(this);
 
-            //this.images.push(image);
+            this.images.push(image);
         },
         onImageLoad(event) {
             const percentage = Math.round(this.loadedImages / this.amount * 100);
@@ -270,7 +270,7 @@ export default {
             this.hideLoader()
         },
         resizeWindow(){
-            this.setImage()
+            this.update()
             this.setWindowSize()
         },
         zoomIn(evt) {
@@ -388,7 +388,6 @@ export default {
                 //show menu
                 this.isMenuOpen = false
             }
-            //this.setImage()
         },
         showMenu(){
             this.$refs.showMenuIcon.style.display = 'block'
@@ -396,7 +395,6 @@ export default {
             this.$refs.menublock.classList.remove('closed');
             this.$refs.viewportWrapper.classList.remove('wide');
             this.$refs.safety.classList.remove('wide');
-            //this.isMenuOpen = true
         },
         hideMenu(){
             this.$refs.showMenuIcon.style.display = 'none'
@@ -404,7 +402,6 @@ export default {
             this.$refs.menublock.classList.add('closed');
             this.$refs.viewportWrapper.classList.add('wide');
             this.$refs.safety.classList.add('wide');
-            //this.isMenuOpen = false
         },
         startMoving(evt){
             console.log('start moving')
@@ -418,8 +415,6 @@ export default {
 
                 let pageX = evt.clientX
                 console.log('do moving')
-
-                //this.changeImage(this.images[10]);
                 
                 if (pageX - this.movementStart >= this.speedFactor) {
                     let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
@@ -462,7 +457,7 @@ export default {
                 this.activeImage = (this.activeImage + itemsSkipped) % this.amount || this.amount;
             }
             
-            this.changeImage(this.images[this.activeImage-1])
+            this.update()
         },
         moveActiveIndexDown(itemsSkipped) {
 
@@ -480,19 +475,25 @@ export default {
                 }
             }
             
-            this.changeImage(this.images[this.activeImage-1])
+            //this.changeImage(this.images[this.activeImage-1])
+            this.update()
+        },
+        update() {
+            const image = this.images[this.activeImage - 1];
+
+            this.currentCanvasImage = image
+
+            this.redraw()
         },
         stopMoving(evt){
             console.log('stop moving')
             this.movement = false
             this.movementStart = 0;
             this.$refs.viewport.style.cursor = 'grab';
-            //this.setZoom()
         },
         startDragging(evt){
             console.log('start dragging')
             this.dragging = true
-            //this.currentLeftPosition = this.currentTopPosition = 0
             document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
             this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
 			this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
@@ -518,14 +519,6 @@ export default {
             this.dragStart = null
             //zoom on click
             //if (!this.dragged) this.zoom(evt.shiftKey ? -1 : 1 );
-        },
-        setZoom(){
-            let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
-            this.ctx.translate(pt.x,pt.y);
-            let factor = Math.pow(1.01,this.currentScale); 
-            this.ctx.scale(factor,factor);
-			this.ctx.translate(-pt.x,-pt.y);
-			this.redraw();
         },
         zoom(clicks){
             //console.log(this.lastX + ' - ' + this.lastY)
