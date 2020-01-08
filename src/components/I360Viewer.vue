@@ -169,9 +169,6 @@ export default {
         }
     },
     watch: {
-        currentImage(value){
-            this.setImage()
-        },
         currentLeftPosition(value){
             this.redraw()
         },
@@ -197,7 +194,8 @@ export default {
             this.resizeWindow()
         },
         loadInitialImage(){
-            this.changeImage(this.imageData[0])
+            this.currentImage = this.imageData[0] 
+            this.setImage()
         },
         resizeWindow(){
             this.setImage()
@@ -224,7 +222,6 @@ export default {
             this.setImage()
         },
         setImage(){
-            //this.resetPosition()
             this.currentLeftPosition = this.currentTopPosition = 0
             this.currentCanvasImage = new Image()
             this.currentCanvasImage.crossOrigin='anonymous'
@@ -290,9 +287,6 @@ export default {
             while (str.length < length)
                 str = padString + str;
             return str;
-        },
-        changeImage(fig){
-            this.currentImage = fig
         },
         showMenu(){
             this.$refs.showMenuIcon.style.display = 'block'

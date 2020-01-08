@@ -1,4 +1,4 @@
-# atp_assets
+# vue-360-viewer
 
 ## Project setup
 ```
