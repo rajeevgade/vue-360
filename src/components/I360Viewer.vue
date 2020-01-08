@@ -1,122 +1,109 @@
 <template>
-    <div class="container-fluid" ref="imageLibrary">
-    
-        <b-row>
-            <b-col>
-                <!-- <div class="header">
-                    <span class="bookTitle">360&deg; Product Viewer</span>
-                    <span class="title"></span>
-                </div> -->
+    <div ref="imageLibrary">
+        <div class="header" v-if="show_header">
+            <span class="bookTitle">360&deg; Product Viewer</span>
+            <span class="title"></span>
+        </div>
 
-                <div id="virtualToolboxInsert">
+        <div id="virtualToolboxInsert">
 
-                    <div id="viewport-wrapper" ref="viewportWrapper">
-                        <div class="viewport" ref="viewport">
-                            <canvas 
-                                class="image-container" 
-                                ref="imageContainer" 
-                                @mouseup="stopMoving" 
-                                @mousedown="startMoving" 
-                                @mousemove="doMoving" 
-                                @touchstart="touchStart"
-                                @touchend="touchEnd"
-                                @touchmove="touchMove"
-                                @wheel="zoomImage"
-                            ></canvas>
-                            <div class="screen-toggle"></div>
-                        </div>
-                        <div id='drag-icon'></div>
+            <div id="viewport-wrapper" ref="viewportWrapper">
+                <div class="viewport" ref="viewport">
+                    <canvas 
+                        class="image-container" 
+                        ref="imageContainer" 
+                        @mouseup="stopMoving" 
+                        @mousedown="startMoving" 
+                        @mousemove="doMoving" 
+                        @touchstart="touchStart"
+                        @touchend="touchEnd"
+                        @touchmove="touchMove"
+                        @wheel="zoomImage"
+                    ></canvas>
+                    <div class="screen-toggle"></div>
+                </div>
+                <div id='drag-icon'></div>
+            </div>
+            
+            <abbr title="Fullscreen Toggle">
+                <div class="fullscreen-toggle" @click="toggleFullScreen">
+                    <div class="fullscreen-toggle-btn" ref="enterFullScreenIcon">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        width="100%" height="100%" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+                            <g>
+                                <polygon points="396.795,396.8 320,396.8 320,448 448,448 448,320 396.795,320 	"/>
+                                <polygon points="396.8,115.205 396.8,192 448,192 448,64 320,64 320,115.205 	"/>
+                                <polygon points="115.205,115.2 192,115.2 192,64 64,64 64,192 115.205,192 	"/>
+                                <polygon points="115.2,396.795 115.2,320 64,320 64,448 192,448 192,396.795 	"/>
+                            </g>
+                        </svg>
                     </div>
-                    
-                    <abbr title="Fullscreen Toggle">
-                        <div class="fullscreen-toggle" @click="toggleFullScreen">
-                            <div class="fullscreen-toggle-btn" ref="enterFullScreenIcon">
-                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                                width="100%" height="100%" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-                                    <g>
-                                        <polygon points="396.795,396.8 320,396.8 320,448 448,448 448,320 396.795,320 	"/>
-                                        <polygon points="396.8,115.205 396.8,192 448,192 448,64 320,64 320,115.205 	"/>
-                                        <polygon points="115.205,115.2 192,115.2 192,64 64,64 64,192 115.205,192 	"/>
-                                        <polygon points="115.2,396.795 115.2,320 64,320 64,448 192,448 192,396.795 	"/>
-                                    </g>
-                                </svg>
-                            </div>
-                            <div class="fullscreen-toggle-btn" ref="leaveFullScreenIcon">
-                                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-                                    <g>
-                                        <path d="M64,371.2h76.795V448H192V320H64V371.2z M140.795,140.8H64V192h128V64h-51.205V140.8z M320,448h51.2v-76.8H448V320H320
-                                            V448z M371.2,140.8V64H320v128h128v-51.2H371.2z"/>
-                                    </g>
-                                </svg>
-                            </div>
-                        </div>
-                    </abbr>
-
-                    <div id="safety" ref="safety"></div>
-
+                    <div class="fullscreen-toggle-btn" ref="leaveFullScreenIcon">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+                            <g>
+                                <path d="M64,371.2h76.795V448H192V320H64V371.2z M140.795,140.8H64V192h128V64h-51.205V140.8z M320,448h51.2v-76.8H448V320H320
+                                    V448z M371.2,140.8V64H320v128h128v-51.2H371.2z"/>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
+            </abbr>
 
-                <div id="menu-btns">
+            <div id="safety" ref="safety"></div>
 
-                    <b-row>
-                        <b-col>
-                            <div id="navigate-btns">
-                                <div class="menu-btns" @click="moveUp" v-b-popover.hover.bottom ="'Move Up'">
-                                    <i class="fa fa-chevron-up"></i>
-                                </div>
-                                <div class="menu-btns" @click="moveDown" v-b-popover.hover.bottom ="'Move Down'">
-                                    <i class="fa fa-chevron-down"></i>
-                                </div>
-                                <div class="menu-btns" @click="resetPosition" v-b-popover.hover.bottom ="'Reset Position'">
-                                    <i class="fa fa-redo-alt"></i>
-                                </div>
-                                <div class="menu-btns" @click="moveLeft" v-b-popover.hover.bottom ="'Move Left'">
-                                    <i class="fa fa-chevron-left"></i>
-                                </div>
-                                <div class="menu-btns" @click="moveRight" v-b-popover.hover.bottom ="'Move Right'">
-                                    <i class="fa fa-chevron-right"></i>
-                                </div>
-                            </div>
-                        </b-col>
-                        <b-col>
-                            <div id="zoom-btns" class="float-right mr-3">
-                                <div class="menu-btns" @click="zoomIn" v-b-popover.hover.bottom ="'Zoom In'">
-                                    <i class="fa fa-search-plus"></i>
-                                </div>
-                                <div class="menu-btns" @click="zoomOut" v-b-popover.hover.bottom ="'Zoom Out'">
-                                    <i class="fa fa-search-minus"></i>
-                                </div>
-                                <div class="menu-btns" @click="cropImage" v-b-popover.hover.bottom ="'Download Image'">
-                                    <i class="fa fa-download"></i>
-                                </div>
-                            </div>
-                        </b-col>
-                    </b-row>
-                    
-                    <!-- Controls -->
-                    <!-- <div class="controls">
+        </div>
 
-                        <div class="navigate">
-                            <button class="s_up" @click="moveUp"></button>
-                            <div>
-                                <button class="s_left" @click="moveLeft"></button>
-                                <button class="reset" @click="resetPosition"></button>
-                                <button class="s_right" @click="moveRight"></button>
-                            </div>
-                            <button class="s_down" @click="moveDown"></button>
-                        </div>
-                        <div class="zoom">
-                            <button class="z_in" @click="zoomIn"></button>
-                            <button class="z_out" @click="zoomOut"></button>
-                        </div>
-                        <button class="crop" @click="cropImage"></button>
-
-                    </div> -->
-                    <!-- /Controls -->
+        <div id="menu-btns">
+            <div id="navigate-btns">
+                <div class="menu-btns" @click="moveUp">
+                    <i class="fa fa-chevron-up"></i>
                 </div>
+                <div class="menu-btns" @click="moveDown">
+                    <i class="fa fa-chevron-down"></i>
+                </div>
+                <div class="menu-btns" @click="resetPosition">
+                    <i class="fa fa-redo-alt"></i>
+                </div>
+                <div class="menu-btns" @click="moveLeft">
+                    <i class="fa fa-chevron-left"></i>
+                </div>
+                <div class="menu-btns" @click="moveRight">
+                    <i class="fa fa-chevron-right"></i>
+                </div>
+            </div>
+            <div id="zoom-btns">
+                <div class="menu-btns" @click="zoomIn">
+                    <i class="fa fa-search-plus"></i>
+                </div>
+                <div class="menu-btns" @click="zoomOut">
+                    <i class="fa fa-search-minus"></i>
+                </div>
+                <div class="menu-btns" @click="cropImage">
+                    <i class="fa fa-download"></i>
+                </div>
+            </div>
+            
+            <!-- Controls -->
+            <!-- <div class="controls">
 
-            </b-col>
-        </b-row>
+                <div class="navigate">
+                    <button class="s_up" @click="moveUp"></button>
+                    <div>
+                        <button class="s_left" @click="moveLeft"></button>
+                        <button class="reset" @click="resetPosition"></button>
+                        <button class="s_right" @click="moveRight"></button>
+                    </div>
+                    <button class="s_down" @click="moveDown"></button>
+                </div>
+                <div class="zoom">
+                    <button class="z_in" @click="zoomIn"></button>
+                    <button class="z_out" @click="zoomOut"></button>
+                </div>
+                <button class="crop" @click="cropImage"></button>
+
+            </div> -->
+            <!-- /Controls -->
+        </div>
 
     </div>
 </template>
@@ -126,11 +113,6 @@
 export default {
     name: 'I360Viewer',
     props: {
-        data: {
-            type: Object,
-            require: true,
-            default: false
-        },
         images: {
             type: Array,
             require: true,
@@ -139,13 +121,27 @@ export default {
             type: Array,
             require: true,
         },
+        show_header: {
+            type: Boolean,
+            require: true,
+            default: false,
+        },
+        spinReverse: {
+            type: Boolean,
+            require: true,
+            default: false,
+        },
+        amount: {
+            type: Number,
+            require: true,
+            default: 24,
+        }
     },
     data(){
         return {
             minScale: 0.5,
             maxScale: 4,
             scale: 0.2,
-            speed: 0.15,
             customOffset: 10,
             currentScale: 1.0,
             currentTopPosition: 0,
@@ -161,12 +157,8 @@ export default {
             lastY: 0,
             currentCanvasImage: null,
             isFullScreen: false,
-            isMenuOpen: true,
             viewPortElementWidth: null,
-            showSpinner: true,
             movementStart: 0,
-            spinReverse: true,
-            amount: 24,
             movement: false,
             dragSpeed: 150,
             speedFactor: 13,
@@ -186,28 +178,11 @@ export default {
         currentTopPosition(value){
             this.redraw()
         },
-        isMenuOpen(value){
-            if(value){
-                this.showMenu()
-                setTimeout(() => {
-                    this.viewPortElementWidth = this.$refs.viewport.getBoundingClientRect().width
-                    console.log(this.viewPortElementWidth)
-                }, 500)
-                
-            }else{
-                this.hideMenu()
-                setTimeout(() => {
-                    this.viewPortElementWidth = this.$refs.viewport.getBoundingClientRect().width
-                    console.log(this.viewPortElementWidth)
-                }, 500)
-            }
-        },
         viewPortElementWidth(value){
             this.update()
         }
     },
     mounted(){
-        console.log(this.imageData)
         this.initData()
     },
     methods: {
@@ -248,7 +223,6 @@ export default {
             this.setImage()
         },
         setImage(){
-            //this.showLoader()
             //this.resetPosition()
             this.currentLeftPosition = this.currentTopPosition = 0
             this.currentCanvasImage = new Image()
@@ -262,21 +236,11 @@ export default {
                 this.trackTransforms(this.ctx)
 
                 this.redraw()
-
-                //this.hideLoader()
             }
 
             this.currentCanvasImage.onerror = () => {
                 console.log('cannot load this image')
             }
-        },
-        showLoader(){
-            this.$refs.imageContainer.style.display = 'none'
-            this.showSpinner = true
-        },
-        hideLoader(){
-            this.$refs.imageContainer.style.display = 'block'
-            this.showSpinner = false
         },
         redraw(){
             let p1 = this.ctx.transformedPoint(0,0);
@@ -327,17 +291,7 @@ export default {
             return str;
         },
         changeImage(fig){
-
             this.currentImage = fig
-        },
-        toggleMenu(evt){
-            if(!this.isMenuOpen){
-                //close menu
-                this.isMenuOpen = true
-            }else{
-                //show menu
-                this.isMenuOpen = false
-            }
         },
         showMenu(){
             this.$refs.showMenuIcon.style.display = 'block'
@@ -356,7 +310,7 @@ export default {
         onMove(pageX){
             if (pageX - this.movementStart >= this.speedFactor) {
                 let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
-                //console.log(itemsSkippedRight)
+                
                 this.movementStart = pageX;
 
                 if (this.spinReverse) {
@@ -370,7 +324,7 @@ export default {
             } else if (this.movementStart - pageX >= this.speedFactor) {
 
                 let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
-                console.log(itemsSkippedLeft)
+                
                 this.movementStart = pageX;
 
                 if (this.spinReverse) {
@@ -383,7 +337,6 @@ export default {
             }
         },
         startMoving(evt){
-            console.log('start moving')
             this.movement = true
             this.movementStart = event.pageX;
             this.$refs.viewport.style.cursor = 'grabbing';
@@ -433,7 +386,6 @@ export default {
             this.redraw()
         },
         stopMoving(evt){
-            console.log('stop moving')
             this.movement = false
             this.movementStart = 0
             this.$refs.viewport.style.cursor = 'grab'
@@ -448,7 +400,6 @@ export default {
             this.movementStart = 0
         },
         startDragging(evt){
-            console.log('start dragging')
             this.dragging = true
             document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
             this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
@@ -457,7 +408,6 @@ export default {
 			this.dragged = false;
         },
         doDragging(evt){
-            console.log('do dragging')
             this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
 			this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
             this.dragged = true;
@@ -470,7 +420,6 @@ export default {
             }
         },
         stopDragging(evt){
-            console.log('stop dragging')
             this.dragging = false
             this.dragStart = null
             //zoom on click
@@ -481,7 +430,7 @@ export default {
             let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
 			this.ctx.translate(pt.x,pt.y);
             let factor = Math.pow(1.01,clicks);
-            console.log(factor)
+            //console.log(factor)
 
             if(factor > 1){
                 this.currentScale += factor
@@ -489,7 +438,7 @@ export default {
                 this.currentScale -= factor
             }
             
-            console.log(this.currentScale)
+            //console.log(this.currentScale)
 			this.ctx.scale(factor,factor);
 			this.ctx.translate(-pt.x,-pt.y);
 			this.redraw();
@@ -585,4 +534,14 @@ export default {
     .menu-toggle-btn, .fullscreen-toggle-btn{
         background-color: #fff;
     }
+    
+    @media (min-width: 576px){
+        #navigate-btns{
+            float: left;
+        }
+        #zoom-btns{
+            float: right;
+        }
+    }
+
 </style>

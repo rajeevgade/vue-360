@@ -1,14 +1,20 @@
 <template>
   <div id="app">
-    <div class="text-center pt-4" v-if="!imagesLoaded">
-      <b-spinner style="width: 3rem; height: 3rem;"></b-spinner>
+    <div id="spinner" v-if="!imagesLoaded">
       <p ref="viewPercentage"></p>
     </div>
-    <I360Viewer :data="app_data" :images="images" :imageData="imageData" v-else/>
+    <I360Viewer 
+      :images="images" 
+      :imageData="imageData" 
+      v-else
+      show_header
+      :amount="amount"
+    />
   </div>
 </template>
 
 <script>
+
 import I360Viewer from './components/I360Viewer.vue'
 
 export default {
@@ -18,13 +24,9 @@ export default {
   },
   data() {
     return {
-      app_data: null,
-      filename: (document.getElementById('asset-container')) ? `${document.getElementById('asset-container').getAttribute('data-acronym')}.xml` : "PLU.xml",
-      acronym: (document.getElementById('asset-container')) ? document.getElementById('asset-container').getAttribute('data-acronym') : "PLU",
-      asset: (document.getElementById('asset-container')) ? document.getElementById('asset-container').getAttribute('data-asset') : "il",
       images: [],
       imageData: [],
-      amount: 24,
+      amount: 36,
       loadedImages: 0,
       imagesLoaded: false,
     }
@@ -38,21 +40,11 @@ export default {
 
       for(let i=1; i <= this.amount; i++){
           let a = this.lpad(i, "0", 2)
-          this.imageData.push(`http://54.149.8.67/atp360/360_product_images/MilwaukeeTool/MilwaukeeTool_M18FUEL12HammerDrillDriver/img/MilwaukeeTools_M18FUEL12HammerDrillDriver-2704-20_${a}.jpg`)
-           /* this.imageData.push(`https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36/chair_${i}.jpg?v1`) */
+          //this.imageData.push(`http://54.149.8.67/atp360/360_product_images/MilwaukeeTool/MilwaukeeTool_M18FUEL12HammerDrillDriver/img/MilwaukeeTools_M18FUEL12HammerDrillDriver-2704-20_${a}.jpg`)
+          this.imageData.push(`https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36/chair_${i}.jpg?v1`)
       }
 
       this.preloadImages()
-
-      /* const params = { filename: this.filename, acronym: this.acronym, asset: this.asset }
-
-      axios.post('/api/appData', params)
-            .then(response => {
-              console.log(response.data.message)
-              this.app_data = response.data.message
-            })
-            .catch(error => console.log(error)) */
-
     },
     lpad(str, padString, length){
         str = str.toString();
@@ -111,17 +103,14 @@ export default {
     },
     onAllImagesLoaded(e){
         this.imagesLoaded = true
-        //this.hideLoader()
     },
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-}
+  #spinner{
+    text-align: center;
+    margin-top: 50px;
+  }
 </style>

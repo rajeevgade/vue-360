@@ -3,10 +3,6 @@ import App from './App.vue'
 import AppConfig from './config'
 import AppHelper from './helper'
 import replaceSpecial from './specialCharacters.js'
-import BootstrapVue from 'bootstrap-vue'
-
-import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 global.axios = require('axios')
 
@@ -17,8 +13,6 @@ global.axios.defaults.headers.common = {
 global.axios.defaults.baseURL = (document.getElementById('asset-container')) ? document.getElementById('asset-container').getAttribute('data-url') : AppConfig.url;
 
 Vue.config.productionTip = false
-
-Vue.use(BootstrapVue)
 
 Vue.prototype.$helper = AppHelper
 Vue.prototype.$replaceSpecial = replaceSpecial

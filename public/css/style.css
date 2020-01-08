@@ -45,8 +45,6 @@ root {
     /* width: calc(100% - 20px); */
     background-color: #000;
     padding: 10px;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
     color: #FFFFFF;
     font-size: 1.5em;
     text-align: center;
@@ -364,11 +362,7 @@ root {
     background-color: #666;
     width: 100%;
     min-height: 50px;
-    border-radius: 10px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
     text-align: center;
-    /* flex: 0 1 50px; */
 }
 
 .menu-btns {
