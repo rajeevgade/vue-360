@@ -183,6 +183,7 @@ export default {
         }
     },
     mounted(){
+        this.toggleFullScreen()
         this.initData()
     },
     methods: {

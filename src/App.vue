@@ -42,6 +42,7 @@ export default {
           let a = this.lpad(i, "0", 2)
           //this.imageData.push(`http://54.149.8.67/atp360/360_product_images/MilwaukeeTool/MilwaukeeTool_M18FUEL12HammerDrillDriver/img/MilwaukeeTools_M18FUEL12HammerDrillDriver-2704-20_${a}.jpg`)
           this.imageData.push(`https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36/chair_${i}.jpg?v1`)
+          //this.imageData.push(`https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-72/chair_${i}.jpg?v1`)
       }
 
       this.preloadImages()
