@@ -55,7 +55,7 @@ root {
 
 /* VIEWER */
 
-#virtualToolboxInsert {
+productInsert {
     background-color: #FFF;
     width: 100%;
     height: calc(100vh - 184px);
@@ -194,12 +194,12 @@ root {
     border-radius: 0;
 }
 
-.fullscreen #virtualToolboxInsert {
+.fullscreen productInsert {
     height: calc(100vh - 95px);
     max-height: none;
 }
 
-/* #virtualToolboxInsert.fullscreen {
+/* productInsert.fullscreen {
     z-index: 9999;
     width: 100%;
     height: 100%;
@@ -359,21 +359,24 @@ root {
 /* MENU BUTTONS */
 
 #menu-btns {
-    background-color: #666;
     width: 100%;
-    min-height: 50px;
+    padding: 5px 0;
     text-align: center;
+    position: absolute;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
 }
 
 .menu-btns {
     background-color: #999;
     width: auto;
     min-height: 20px;
-    margin: 10px 5px;
-    padding: 5px 20px;
+    margin: 5px 5px;
+    padding: 5px 10px;
     border-radius: 5px;
     outline: none;
-    color: #FFF;
+    color: #fff;
     font-size: 1.3em;
     text-align: center;
     line-height: 1em;

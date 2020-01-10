@@ -7,7 +7,6 @@
       :images="images" 
       :imageData="imageData" 
       v-else
-      show_header
       :amount="amount"
     />
   </div>
