@@ -12,13 +12,14 @@
                     <canvas 
                         class="image-container" 
                         ref="imageContainer" 
-                        @mouseup="stopMoving" 
-                        @mousedown="startMoving" 
-                        @mousemove="doMoving" 
                         @touchstart="touchStart"
                         @touchend="touchEnd"
                         @touchmove="touchMove"
                         @wheel="zoomImage"
+                        v-hammer:pinch="onPinch"
+                        v-hammer:pinchend="onPinch"
+                        v-hammer:pinchout="onPinchOut"
+                        v-hammer:pinchin="onPinchIn"
                     ></canvas>
                     <div class="screen-toggle"></div>
                 </div>
@@ -48,61 +49,26 @@
                     </div>
                 </div>
             </abbr>
-
-            <div id="safety" ref="safety"></div>
-
         </div>
 
         <div id="menu-btns">
             <div id="navigate-btns">
-                <div class="menu-btns" @click="moveUp">
-                    <i class="fa fa-chevron-up"></i>
-                </div>
-                <div class="menu-btns" @click="moveDown">
-                    <i class="fa fa-chevron-down"></i>
-                </div>
-                <div class="menu-btns" @click="resetPosition">
-                    <i class="fa fa-redo-alt"></i>
-                </div>
-                <div class="menu-btns" @click="moveLeft">
-                    <i class="fa fa-chevron-left"></i>
-                </div>
-                <div class="menu-btns" @click="moveRight">
-                    <i class="fa fa-chevron-right"></i>
-                </div>
-            </div>
-            <div id="zoom-btns">
                 <div class="menu-btns" @click="zoomIn">
                     <i class="fa fa-search-plus"></i>
                 </div>
                 <div class="menu-btns" @click="zoomOut">
                     <i class="fa fa-search-minus"></i>
                 </div>
+                <div class="menu-btns" @click="togglePanMode" :class="(panmode) ? 'active' : ''">
+                    <i class="fa fa-hand-paper"></i>
+                </div>
                 <div class="menu-btns" @click="cropImage">
                     <i class="fa fa-download"></i>
                 </div>
+                <div class="menu-btns" @click="resetPosition">
+                    <i class="fa fa-redo-alt"></i>
+                </div>
             </div>
-            
-            <!-- Controls -->
-            <!-- <div class="controls">
-
-                <div class="navigate">
-                    <button class="s_up" @click="moveUp"></button>
-                    <div>
-                        <button class="s_left" @click="moveLeft"></button>
-                        <button class="reset" @click="resetPosition"></button>
-                        <button class="s_right" @click="moveRight"></button>
-                    </div>
-                    <button class="s_down" @click="moveDown"></button>
-                </div>
-                <div class="zoom">
-                    <button class="z_in" @click="zoomIn"></button>
-                    <button class="z_out" @click="zoomOut"></button>
-                </div>
-                <button class="crop" @click="cropImage"></button>
-
-            </div> -->
-            <!-- /Controls -->
         </div>
 
     </div>
@@ -166,6 +132,7 @@ export default {
             stopAtEdges: false,
             imagesLoaded: false,
             loadedImages: 0,
+            panmode: false,
         }
     },
     watch: {
@@ -177,6 +144,13 @@ export default {
         },
         viewPortElementWidth(value){
             this.update()
+        },
+        panmode(value){
+            if(value){
+                this.bindPanModeEvents()
+            }else{
+                this.bind360ModeEvents()
+            }
         }
     },
     mounted(){
@@ -189,7 +163,7 @@ export default {
 
             this.canvas = this.$refs.imageContainer
             this.ctx = this.canvas.getContext('2d')
-            this.canvas.addEventListener('mouseup', this.stopMoving);
+            this.bind360ModeEvents();
             window.addEventListener('resize', this.resizeWindow);
             this.resizeWindow()
         },
@@ -199,6 +173,38 @@ export default {
         },
         resizeWindow(){
             this.setImage()
+        },
+        onPinch(evt){
+            console.log('on tap')
+        },
+        onPinchEnd(evt){
+            this.tempScale = 0
+        },
+        onPinchIn(evt){
+            //alert('pinchin:' + evt.scale)
+            this.zoomOut()
+        },
+        onPinchOut(evt){
+            this.zoomIn()
+        },
+        bindPanModeEvents(){
+            this.canvas.removeEventListener('mouseup', this.stopMoving);
+            this.canvas.removeEventListener('mousedown', this.startMoving);
+            this.canvas.removeEventListener('mousemove', this.doMoving); 
+            this.canvas.addEventListener('mouseup', this.stopDragging);
+            this.canvas.addEventListener('mousedown', this.startDragging);
+            this.canvas.addEventListener('mousemove', this.doDragging);
+        },
+        bind360ModeEvents(){
+            this.canvas.removeEventListener('mouseup', this.stopDragging);
+            this.canvas.removeEventListener('mousedown', this.startDragging);
+            this.canvas.removeEventListener('mousemove', this.doDragging); 
+            this.canvas.addEventListener('mouseup', this.stopMoving);
+            this.canvas.addEventListener('mousedown', this.startMoving);
+            this.canvas.addEventListener('mousemove', this.doMoving);
+        },
+        togglePanMode(){
+            this.panmode = !this.panmode
         },
         zoomIn(evt) {
             this.zoom(2)
