@@ -1,5 +1,5 @@
 <template>
-    <div ref="imageLibrary">
+    <div class="main fullscreen" ref="imageLibrary">
         <div class="header" v-if="show_header">
             <span class="bookTitle">360&deg; Product Viewer</span>
             <span class="title"></span>
@@ -12,9 +12,6 @@
                     <canvas 
                         class="image-container" 
                         ref="imageContainer" 
-                        @touchstart="touchStart"
-                        @touchend="touchEnd"
-                        @touchmove="touchMove"
                         @wheel="zoomImage"
                         v-hammer:pinch="onPinch"
                         v-hammer:pinchend="onPinch"
@@ -118,7 +115,6 @@ export default {
             canvas: null,
             ctx: null,
             dragStart: null,
-            dragged: false,
             lastX: 0,
             lastY: 0,
             currentCanvasImage: null,
@@ -132,7 +128,10 @@ export default {
             stopAtEdges: false,
             imagesLoaded: false,
             loadedImages: 0,
+            centerX: 0,
+            centerY: 0,
             panmode: false,
+            isMobile: false,
         }
     },
     watch: {
@@ -146,26 +145,26 @@ export default {
             this.update()
         },
         panmode(value){
-            if(value){
-                this.bindPanModeEvents()
-            }else{
-                this.bind360ModeEvents()
-            }
-        }
+            this.attachEvents()
+        },
     },
     mounted(){
-        this.toggleFullScreen()
+        //this.toggleFullScreen()
         this.initData()
     },
     methods: {
         initData(){
+            this.checkMobile()
             this.loadInitialImage()
 
             this.canvas = this.$refs.imageContainer
             this.ctx = this.canvas.getContext('2d')
-            this.bind360ModeEvents();
+            this.attachEvents();
             window.addEventListener('resize', this.resizeWindow);
             this.resizeWindow()
+        },
+        checkMobile(){
+            this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
         },
         loadInitialImage(){
             this.currentImage = this.imageData[0] 
@@ -187,18 +186,43 @@ export default {
         onPinchOut(evt){
             this.zoomIn()
         },
+        attachEvents(){
+            if(this.panmode){
+                this.bindPanModeEvents()
+            }else{
+                this.bind360ModeEvents()
+            }
+        },
         bindPanModeEvents(){
+            this.canvas.removeEventListener('touchend', this.touchEnd);
+            this.canvas.removeEventListener('touchstart', this.touchStart);
+            this.canvas.removeEventListener('touchmove', this.touchMove); 
+
+            this.canvas.addEventListener('touchend', this.stopDragging);
+            this.canvas.addEventListener('touchstart', this.startDragging);
+            this.canvas.addEventListener('touchmove', this.doDragging); 
+
             this.canvas.removeEventListener('mouseup', this.stopMoving);
             this.canvas.removeEventListener('mousedown', this.startMoving);
             this.canvas.removeEventListener('mousemove', this.doMoving); 
+
             this.canvas.addEventListener('mouseup', this.stopDragging);
             this.canvas.addEventListener('mousedown', this.startDragging);
             this.canvas.addEventListener('mousemove', this.doDragging);
         },
         bind360ModeEvents(){
+            this.canvas.removeEventListener('touchend', this.stopDragging);
+            this.canvas.removeEventListener('touchstart', this.startDragging);
+            this.canvas.removeEventListener('touchmove', this.doDragging); 
+
+            this.canvas.addEventListener('touchend', this.touchEnd);
+            this.canvas.addEventListener('touchstart', this.touchStart);
+            this.canvas.addEventListener('touchmove', this.touchMove); 
+
             this.canvas.removeEventListener('mouseup', this.stopDragging);
             this.canvas.removeEventListener('mousedown', this.startDragging);
             this.canvas.removeEventListener('mousemove', this.doDragging); 
+            
             this.canvas.addEventListener('mouseup', this.stopMoving);
             this.canvas.addEventListener('mousedown', this.startMoving);
             this.canvas.addEventListener('mousemove', this.doMoving);
@@ -207,9 +231,13 @@ export default {
             this.panmode = !this.panmode
         },
         zoomIn(evt) {
+            this.lastX = this.centerX;
+            this.lastY = this.centerY
             this.zoom(2)
         },
         zoomOut(evt) {
+            this.lastX = this.centerX;
+            this.lastY = this.centerY
             this.zoom(-2)
         },
         moveLeft() {
@@ -255,6 +283,9 @@ export default {
             let centerShift_x = (this.canvas.width - this.currentCanvasImage.width*ratio )/2
             let centerShift_y = (this.canvas.height - this.currentCanvasImage.height*ratio )/2
             this.ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
+
+            this.centerX = this.currentCanvasImage.width*ratio/2
+            this.centerY = this.currentCanvasImage.height*ratio/2
             
             //center image
             this.ctx.drawImage(this.currentCanvasImage, this.currentLeftPosition, this.currentTopPosition, this.currentCanvasImage.width, this.currentCanvasImage.height,
@@ -403,17 +434,28 @@ export default {
         startDragging(evt){
             this.dragging = true
             document.body.style.mozUserSelect = document.body.style.webkitUserSelect = document.body.style.userSelect = 'none';
-            this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
-			this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
+
+            if(this.isMobile){
+                this.lastX = evt.touches[0].offsetX || (evt.touches[0].pageX - this.canvas.offsetLeft);
+			    this.lastY = evt.touches[0].offsetY || (evt.touches[0].pageY - this.canvas.offsetTop);
+            }else{
+                this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
+			    this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
+            }
+            
 			this.dragStart = this.ctx.transformedPoint(this.lastX,this.lastY);
-			this.dragged = false;
         },
         doDragging(evt){
-            this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
-			this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
-            this.dragged = true;
-
-			if (this.dragStart){
+            
+            if(this.isMobile){
+                this.lastX = evt.touches[0].offsetX || (evt.touches[0].pageX - this.canvas.offsetLeft);
+			    this.lastY = evt.touches[0].offsetY || (evt.touches[0].pageY - this.canvas.offsetTop);
+            }else{
+                this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
+			    this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
+            }
+            
+            if (this.dragStart){
 				let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
 				this.ctx.translate(pt.x-this.dragStart.x,pt.y-this.dragStart.y);
                 //redraw();
@@ -423,26 +465,39 @@ export default {
         stopDragging(evt){
             this.dragging = false
             this.dragStart = null
-            //zoom on click
-            //if (!this.dragged) this.zoom(evt.shiftKey ? -1 : 1 );
+        },
+        restrictScale(){
+            let scale = this.currentScale
+            if (scale < this.minScale) {
+                scale = this.minScale;
+            } else if (scale > this.maxScale) {
+                scale = this.maxScale;
+            }
+            return scale;
         },
         zoom(clicks){
             //console.log(this.lastX + ' - ' + this.lastY)
-            let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
-			this.ctx.translate(pt.x,pt.y);
             let factor = Math.pow(1.01,clicks);
             //console.log(factor)
 
             if(factor > 1){
                 this.currentScale += factor
             }else{
-                this.currentScale -= factor
+                if(this.currentScale-factor > 1)
+                    this.currentScale -= factor
+                else
+                    this.currentScale = 1
             }
             
-            //console.log(this.currentScale)
-			this.ctx.scale(factor,factor);
-			this.ctx.translate(-pt.x,-pt.y);
-			this.redraw();
+            if(this.currentScale > 1){
+                let pt = this.ctx.transformedPoint(this.lastX,this.lastY);
+                this.ctx.translate(pt.x,pt.y);
+                
+                //console.log(this.currentScale)
+                this.ctx.scale(factor,factor);
+                this.ctx.translate(-pt.x,-pt.y);
+                this.redraw();
+            }
         },
         zoomImage(evt){
             this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
@@ -535,14 +590,4 @@ export default {
     .menu-toggle-btn, .fullscreen-toggle-btn{
         background-color: #fff;
     }
-    
-    @media (min-width: 576px){
-        #navigate-btns{
-            float: left;
-        }
-        #zoom-btns{
-            float: right;
-        }
-    }
-
 </style>
