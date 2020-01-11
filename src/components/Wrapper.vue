@@ -14,6 +14,7 @@
             :header="header"
             :spinReverse="spinReverse"
             :autoplay="autoplay"
+            :loop="loop"
           />
     </div>
   </div>
@@ -48,14 +49,19 @@ export default {
         default: ''
     },
     autoplay: {
-        type: Number,
+        type: Boolean,
         require: false,
-        default: 0
+        default: false
     },
     spinReverse: {
         type: Boolean,
         require: false,
         default: false
+    },
+    loop: {
+        type: Number,
+        require: false,
+        default: 1
     }
   },
   components: {

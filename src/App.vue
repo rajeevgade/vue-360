@@ -7,16 +7,17 @@
             :frames=36
             imagePath="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car"
             fileName="iris-{index}.jpeg"
-            header="Car - 36 Image Wide Product Example"
+            header="36 Images - Autoplay (2 loops) - Reverse Spin"
             spinReverse
-            :autoplay=1
+            autoplay
+            :loop=2
           />
         </div>
         <div class="col-12 mb-4 text-center">
           <h4>More Examples</h4>
           <p>A simple, interactive resource that can be used to provide a virtual tour of your product.</p>
           <p>100% Mobile Responsive</p>
-          <p>Features include Zoom, Pan, Autoplay, Crop, Fullscreen, Reverse Spin, Show/Hide Header, and more. <a href="#">Click here for more information.</a> </p>
+          <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Fullscreen, Reverse Spin, Show/Hide Header, and more. <a href="#">Click here for more information.</a> </p>
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
           <h4 class="my-2 text-center">36 Images</h4>

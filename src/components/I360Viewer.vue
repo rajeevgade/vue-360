@@ -93,9 +93,14 @@ export default {
             default: 24,
         },
         autoplay: {
+            type: Boolean,
+            require: false,
+            default: false
+        },
+        loop: {
             type: Number,
             require: false,
-            default: 0
+            default: 1
         }
     },
     data(){
@@ -130,6 +135,7 @@ export default {
             centerY: 0,
             panmode: false,
             isMobile: false,
+            currentLoop: 0,
             loopTimeoutId: 0,
         }
     },
@@ -167,7 +173,7 @@ export default {
             }
         },
         play(){
-            this.loopTimeoutId = window.setInterval(() => this.loop(), 100);
+            this.loopTimeoutId = window.setInterval(() => this.loopImages(), 100);
         },
         onSpin() {
             if (this.autoplay || this.loopTimeoutId) {
@@ -179,17 +185,31 @@ export default {
             if (this.bottomCircle) this.show360ViewCircleIcon();
             window.clearTimeout(this.loopTimeoutId);
         },
-        loop() {
+        loopImages() {
             if(this.spinReverse){
-                if(this.activeImage == 2)
-                    this.stop()
-                else
+                if(this.activeImage == 1){
+                    if(this.currentLoop == this.loop)
+                        this.stop()
+                    else
+                        this.prev()
+
+                    this.currentLoop++
+                }
+                else{
                     this.prev()
+                }
             }else{
-                if(this.activeImage == this.amount)
-                    this.stop()
-                else
+                if(this.activeImage == this.amount){
+                    this.currentLoop++
+                    
+                    if(this.currentLoop == this.loop)
+                        this.stop()
+                    else
+                        this.next()
+                }
+                else{
                     this.next()
+                }
             }
         },
         next() {
