@@ -28,11 +28,12 @@
           />
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
-          <h4 class="my-2 text-center">72 Images</h4>
+          <h4 class="my-2 text-center">72 Images - Box Shadow</h4>
           <Wrapper 
             :frames=72
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-72"
             fileName="chair_{index}.jpg?v1"
+            boxShadow
           />
         </div>
       </div>

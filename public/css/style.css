@@ -166,6 +166,7 @@ root {
     cursor: pointer;
     top: 0;
     right: 0;
+    z-index: 150;
 }
 
 .menu-toggle {
@@ -373,6 +374,7 @@ root {
     bottom: 0;
     display: flex;
     justify-content: center;
+    z-index: 150;
 }
 
 .menu-btns {
@@ -621,4 +623,14 @@ span.frac-denominator {
     background-position: center;
     background-size: contain;
     position: relative;
+}
+
+.product-box-shadow{
+    position: absolute;
+    z-index: 99;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    box-shadow: rgb(34, 34, 34) 0px 0px 100px inset;
 }

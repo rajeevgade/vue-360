@@ -16,6 +16,7 @@
                 v-hammer:pinchin="onPinchIn"
             ></canvas>
             <div class="screen-toggle"></div>
+            <div class="product-box-shadow" v-if="boxShadow"></div>
         </div>
 
         <abbr title="Fullscreen Toggle">
@@ -51,9 +52,10 @@
                     <i class="fa fa-search-minus"></i>
                 </div>
                 <div class="menu-btns" @click="togglePanMode" :class="(panmode) ? 'active' : ''">
-                    <i class="fa fa-hand-paper"></i>
+                    <i class="fa fa-arrows-alt" v-if="!panmode"></i>
+                    <span v-else>360&deg;</span>
                 </div>
-                <div class="menu-btns" @click="cropImage">
+                <div class="menu-btns" @click="cropImage" v-if="!isMobile">
                     <i class="fa fa-download"></i>
                 </div>
                 <div class="menu-btns" @click="resetPosition">
@@ -101,6 +103,11 @@ export default {
             type: Number,
             require: false,
             default: 1
+        },
+        boxShadow: {
+            type: Boolean,
+            require: false,
+            default: false
         }
     },
     data(){
@@ -186,30 +193,21 @@ export default {
             window.clearTimeout(this.loopTimeoutId);
         },
         loopImages() {
-            if(this.spinReverse){
-                if(this.activeImage == 1){
-                    if(this.currentLoop == this.loop)
-                        this.stop()
-                    else
-                        this.prev()
-
-                    this.currentLoop++
+            if(this.activeImage == 1){
+                if(this.currentLoop == this.loop){
+                    this.stop()
                 }
                 else{
-                    this.prev()
-                }
-            }else{
-                if(this.activeImage == this.amount){
                     this.currentLoop++
                     
-                    if(this.currentLoop == this.loop)
-                        this.stop()
+                    if(this.spinReverse) 
+                        this.prev() 
                     else
                         this.next()
                 }
-                else{
-                    this.next()
-                }
+            }
+            else{
+                (this.spinReverse) ? this.prev() : this.next()
             }
         },
         next() {
@@ -254,38 +252,38 @@ export default {
             }
         },
         bindPanModeEvents(){
-            this.canvas.removeEventListener('touchend', this.touchEnd);
-            this.canvas.removeEventListener('touchstart', this.touchStart);
-            this.canvas.removeEventListener('touchmove', this.touchMove); 
+            this.$refs.viewport.removeEventListener('touchend', this.touchEnd);
+            this.$refs.viewport.removeEventListener('touchstart', this.touchStart);
+            this.$refs.viewport.removeEventListener('touchmove', this.touchMove); 
 
-            this.canvas.addEventListener('touchend', this.stopDragging);
-            this.canvas.addEventListener('touchstart', this.startDragging);
-            this.canvas.addEventListener('touchmove', this.doDragging); 
+            this.$refs.viewport.addEventListener('touchend', this.stopDragging);
+            this.$refs.viewport.addEventListener('touchstart', this.startDragging);
+            this.$refs.viewport.addEventListener('touchmove', this.doDragging); 
 
-            this.canvas.removeEventListener('mouseup', this.stopMoving);
-            this.canvas.removeEventListener('mousedown', this.startMoving);
-            this.canvas.removeEventListener('mousemove', this.doMoving); 
+            this.$refs.viewport.removeEventListener('mouseup', this.stopMoving);
+            this.$refs.viewport.removeEventListener('mousedown', this.startMoving);
+            this.$refs.viewport.removeEventListener('mousemove', this.doMoving); 
 
-            this.canvas.addEventListener('mouseup', this.stopDragging);
-            this.canvas.addEventListener('mousedown', this.startDragging);
-            this.canvas.addEventListener('mousemove', this.doDragging);
+            this.$refs.viewport.addEventListener('mouseup', this.stopDragging);
+            this.$refs.viewport.addEventListener('mousedown', this.startDragging);
+            this.$refs.viewport.addEventListener('mousemove', this.doDragging);
         },
         bind360ModeEvents(){
-            this.canvas.removeEventListener('touchend', this.stopDragging);
-            this.canvas.removeEventListener('touchstart', this.startDragging);
-            this.canvas.removeEventListener('touchmove', this.doDragging); 
+            this.$refs.viewport.removeEventListener('touchend', this.stopDragging);
+            this.$refs.viewport.removeEventListener('touchstart', this.startDragging);
+            this.$refs.viewport.removeEventListener('touchmove', this.doDragging); 
 
-            this.canvas.addEventListener('touchend', this.touchEnd);
-            this.canvas.addEventListener('touchstart', this.touchStart);
-            this.canvas.addEventListener('touchmove', this.touchMove); 
+            this.$refs.viewport.addEventListener('touchend', this.touchEnd);
+            this.$refs.viewport.addEventListener('touchstart', this.touchStart);
+            this.$refs.viewport.addEventListener('touchmove', this.touchMove); 
 
-            this.canvas.removeEventListener('mouseup', this.stopDragging);
-            this.canvas.removeEventListener('mousedown', this.startDragging);
-            this.canvas.removeEventListener('mousemove', this.doDragging); 
+            this.$refs.viewport.removeEventListener('mouseup', this.stopDragging);
+            this.$refs.viewport.removeEventListener('mousedown', this.startDragging);
+            this.$refs.viewport.removeEventListener('mousemove', this.doDragging); 
             
-            this.canvas.addEventListener('mouseup', this.stopMoving);
-            this.canvas.addEventListener('mousedown', this.startMoving);
-            this.canvas.addEventListener('mousemove', this.doMoving);
+            this.$refs.viewport.addEventListener('mouseup', this.stopMoving);
+            this.$refs.viewport.addEventListener('mousedown', this.startMoving);
+            this.$refs.viewport.addEventListener('mousemove', this.doMoving);
         },
         togglePanMode(){
             this.panmode = !this.panmode
@@ -327,6 +325,8 @@ export default {
                     let viewportElement = this.$refs.viewport.getBoundingClientRect()
                     this.canvas.width  = (this.isFullScreen) ? viewportElement.width : this.currentCanvasImage.width
                     this.canvas.height = (this.isFullScreen) ? viewportElement.height : this.currentCanvasImage.height
+                    this.trackTransforms(this.ctx)
+
                     this.redraw()
                 }
 
@@ -338,15 +338,18 @@ export default {
                 let viewportElement = this.$refs.viewport.getBoundingClientRect()
                 this.canvas.width  = (this.isFullScreen) ? viewportElement.width : this.currentCanvasImage.width
                 this.canvas.height = (this.isFullScreen) ? viewportElement.height : this.currentCanvasImage.height
+                this.trackTransforms(this.ctx)
+
                 this.redraw()
             }
             
         },
         redraw(){
-            this.trackTransforms(this.ctx).then(() => {
-                //this.ctx.save()
+
+            try{
                 let p1 = this.ctx.transformedPoint(0,0);
                 let p2 = this.ctx.transformedPoint(this.canvas.width,this.canvas.height)
+
                 let hRatio = this.canvas.width / this.currentCanvasImage.width
                 let vRatio =  this.canvas.height / this.currentCanvasImage.height
                 let ratio  = Math.min(hRatio, vRatio);
@@ -359,8 +362,12 @@ export default {
                 
                 //center image
                 this.ctx.drawImage(this.currentCanvasImage, this.currentLeftPosition, this.currentTopPosition, this.currentCanvasImage.width, this.currentCanvasImage.height,
-                            centerShift_x,centerShift_y,this.currentCanvasImage.width*ratio, this.currentCanvasImage.height*ratio);
-            });  
+                            centerShift_x,centerShift_y,this.currentCanvasImage.width*ratio, this.currentCanvasImage.height*ratio);  
+            }
+            catch(e){
+                //console.log(e)
+                this.trackTransforms(this.ctx)
+            }
 
         },
         cropImage(){

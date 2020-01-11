@@ -15,6 +15,7 @@
             :spinReverse="spinReverse"
             :autoplay="autoplay"
             :loop="loop"
+            :boxShadow="boxShadow"
           />
     </div>
   </div>
@@ -62,6 +63,11 @@ export default {
         type: Number,
         require: false,
         default: 1
+    },
+    boxShadow: {
+        type: Boolean,
+        require: false,
+        default: false
     }
   },
   components: {
