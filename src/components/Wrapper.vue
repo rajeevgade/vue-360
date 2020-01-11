@@ -12,6 +12,8 @@
             :imageData="imageData" 
             :amount="amount"
             :header="header"
+            :spinReverse="spinReverse"
+            :autoplay="autoplay"
           />
     </div>
   </div>
@@ -25,26 +27,36 @@ import AppConfig from '../config'
 export default {
   name: 'Wrapper',
   props: {
-      frames: {
-          type: Number,
-          require: true,
-          default: 24
-      },
-      imagePath: {
-          type: String,
-          require: true,
-          default: ''
-      },
-      fileName: {
-          type: String,
-          require: true,
-          default: ''
-      },
-      header: {
-          type: String,
-          require: true,
-          default: ''
-      }
+    frames: {
+        type: Number,
+        require: true,
+        default: 24
+    },
+    imagePath: {
+        type: String,
+        require: true,
+        default: ''
+    },
+    fileName: {
+        type: String,
+        require: true,
+        default: ''
+    },
+    header: {
+        type: String,
+        require: true,
+        default: ''
+    },
+    autoplay: {
+        type: Number,
+        require: false,
+        default: 0
+    },
+    spinReverse: {
+        type: Boolean,
+        require: false,
+        default: false
+    }
   },
   components: {
     I360Viewer

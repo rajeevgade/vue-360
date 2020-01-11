@@ -91,6 +91,11 @@ export default {
             type: Number,
             require: true,
             default: 24,
+        },
+        autoplay: {
+            type: Number,
+            require: false,
+            default: 0
         }
     },
     data(){
@@ -125,6 +130,7 @@ export default {
             centerY: 0,
             panmode: false,
             isMobile: false,
+            loopTimeoutId: 0,
         }
     },
     watch: {
@@ -155,6 +161,47 @@ export default {
             this.attachEvents();
             window.addEventListener('resize', this.resizeWindow);
             this.resizeWindow()
+
+            if(this.autoplay){
+                this.play()
+            }
+        },
+        play(){
+            this.loopTimeoutId = window.setInterval(() => this.loop(), 100);
+        },
+        onSpin() {
+            if (this.autoplay || this.loopTimeoutId) {
+                this.stop();
+                this.autoplay = false;
+            }
+        },
+        stop() {
+            if (this.bottomCircle) this.show360ViewCircleIcon();
+            window.clearTimeout(this.loopTimeoutId);
+        },
+        loop() {
+            if(this.spinReverse){
+                if(this.activeImage == 2)
+                    this.stop()
+                else
+                    this.prev()
+            }else{
+                if(this.activeImage == this.amount)
+                    this.stop()
+                else
+                    this.next()
+            }
+        },
+        next() {
+            this.moveActiveIndexUp(1);
+            this.update();
+        },
+        prev() {
+            this.moveActiveIndexDown(1);
+            this.update();
+        },
+        loadImages(){
+            console.log('load image')
         },
         checkMobile(){
             this.isMobile = !!('ontouchstart' in window || navigator.msMaxTouchPoints);
@@ -260,8 +307,6 @@ export default {
                     let viewportElement = this.$refs.viewport.getBoundingClientRect()
                     this.canvas.width  = (this.isFullScreen) ? viewportElement.width : this.currentCanvasImage.width
                     this.canvas.height = (this.isFullScreen) ? viewportElement.height : this.currentCanvasImage.height
-                    this.trackTransforms(this.ctx)
-
                     this.redraw()
                 }
 
@@ -273,29 +318,29 @@ export default {
                 let viewportElement = this.$refs.viewport.getBoundingClientRect()
                 this.canvas.width  = (this.isFullScreen) ? viewportElement.width : this.currentCanvasImage.width
                 this.canvas.height = (this.isFullScreen) ? viewportElement.height : this.currentCanvasImage.height
-                this.trackTransforms(this.ctx)
-
                 this.redraw()
             }
             
-           
         },
         redraw(){
-            let p1 = this.ctx.transformedPoint(0,0);
-            let p2 = this.ctx.transformedPoint(this.canvas.width,this.canvas.height)
-            let hRatio = this.canvas.width / this.currentCanvasImage.width
-            let vRatio =  this.canvas.height / this.currentCanvasImage.height
-            let ratio  = Math.min(hRatio, vRatio);
-            let centerShift_x = (this.canvas.width - this.currentCanvasImage.width*ratio )/2
-            let centerShift_y = (this.canvas.height - this.currentCanvasImage.height*ratio )/2
-            this.ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
+            this.trackTransforms(this.ctx).then(() => {
+                //this.ctx.save()
+                let p1 = this.ctx.transformedPoint(0,0);
+                let p2 = this.ctx.transformedPoint(this.canvas.width,this.canvas.height)
+                let hRatio = this.canvas.width / this.currentCanvasImage.width
+                let vRatio =  this.canvas.height / this.currentCanvasImage.height
+                let ratio  = Math.min(hRatio, vRatio);
+                let centerShift_x = (this.canvas.width - this.currentCanvasImage.width*ratio )/2
+                let centerShift_y = (this.canvas.height - this.currentCanvasImage.height*ratio )/2
+                this.ctx.clearRect(p1.x,p1.y,p2.x-p1.x,p2.y-p1.y);
 
-            this.centerX = this.currentCanvasImage.width*ratio/2
-            this.centerY = this.currentCanvasImage.height*ratio/2
-            
-            //center image
-            this.ctx.drawImage(this.currentCanvasImage, this.currentLeftPosition, this.currentTopPosition, this.currentCanvasImage.width, this.currentCanvasImage.height,
-                      centerShift_x,centerShift_y,this.currentCanvasImage.width*ratio, this.currentCanvasImage.height*ratio);  
+                this.centerX = this.currentCanvasImage.width*ratio/2
+                this.centerY = this.currentCanvasImage.height*ratio/2
+                
+                //center image
+                this.ctx.drawImage(this.currentCanvasImage, this.currentLeftPosition, this.currentTopPosition, this.currentCanvasImage.width, this.currentCanvasImage.height,
+                            centerShift_x,centerShift_y,this.currentCanvasImage.width*ratio, this.currentCanvasImage.height*ratio);
+            });  
 
         },
         cropImage(){
@@ -502,59 +547,65 @@ export default {
                 
         },
         trackTransforms(ctx){
-            var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
-            var xform = svg.createSVGMatrix();
-            this.ctx.getTransform = function(){ return xform; };
-            
-            var savedTransforms = [];
-            var save = ctx.save;
-            this.ctx.save = () => {
-                savedTransforms.push(xform.translate(0,0));
-                return save.call(this.ctx);
-            };
-            var restore = ctx.restore;
-            this.ctx.restore = () => {
-                xform = savedTransforms.pop();
-                return restore.call(this.ctx);
-            };
 
-            var scale = this.ctx.scale;
-            this.ctx.scale = (sx,sy) => {
-                xform = xform.scaleNonUniform(sx,sy);
-                return scale.call(this.ctx,sx,sy);
-            };
-            var rotate = this.ctx.rotate;
-            this.ctx.rotate = (radians) => {
-                xform = xform.rotate(radians*180/Math.PI);
-                return rotate.call(this.ctx,radians);
-            };
-            var translate = this.ctx.translate;
-            this.ctx.translate = (dx,dy) => {
-                xform = xform.translate(dx,dy);
-                return translate.call(this.ctx,dx,dy);
-            };
-            var transform = this.ctx.transform;
-            this.ctx.transform = (a,b,c,d,e,f) => {
-                var m2 = svg.createSVGMatrix();
-                m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
-                xform = xform.multiply(m2);
-                return transform.call(this.ctx,a,b,c,d,e,f);
-            };
-            var setTransform = this.ctx.setTransform;
-            this.ctx.setTransform = (a,b,c,d,e,f) => {
-                xform.a = a;
-                xform.b = b;
-                xform.c = c;
-                xform.d = d;
-                xform.e = e;
-                xform.f = f;
-                return setTransform.call(this.ctx,a,b,c,d,e,f);
-            };
-            var pt  = svg.createSVGPoint();
-            this.ctx.transformedPoint = (x,y) => {
-                pt.x=x; pt.y=y;
-                return pt.matrixTransform(xform.inverse());
-            }
+            return new Promise(resolve => {
+                var svg = document.createElementNS("http://www.w3.org/2000/svg",'svg');
+                var xform = svg.createSVGMatrix();
+                this.ctx.getTransform = function(){ return xform; };
+                
+                var savedTransforms = [];
+                var save = ctx.save;
+                this.ctx.save = () => {
+                    savedTransforms.push(xform.translate(0,0));
+                    return save.call(this.ctx);
+                };
+                var restore = ctx.restore;
+                this.ctx.restore = () => {
+                    xform = savedTransforms.pop();
+                    return restore.call(this.ctx);
+                };
+
+                var scale = this.ctx.scale;
+                this.ctx.scale = (sx,sy) => {
+                    xform = xform.scaleNonUniform(sx,sy);
+                    return scale.call(this.ctx,sx,sy);
+                };
+                var rotate = this.ctx.rotate;
+                this.ctx.rotate = (radians) => {
+                    xform = xform.rotate(radians*180/Math.PI);
+                    return rotate.call(this.ctx,radians);
+                };
+                var translate = this.ctx.translate;
+                this.ctx.translate = (dx,dy) => {
+                    xform = xform.translate(dx,dy);
+                    return translate.call(this.ctx,dx,dy);
+                };
+                var transform = this.ctx.transform;
+                this.ctx.transform = (a,b,c,d,e,f) => {
+                    var m2 = svg.createSVGMatrix();
+                    m2.a=a; m2.b=b; m2.c=c; m2.d=d; m2.e=e; m2.f=f;
+                    xform = xform.multiply(m2);
+                    return transform.call(this.ctx,a,b,c,d,e,f);
+                };
+                var setTransform = this.ctx.setTransform;
+                this.ctx.setTransform = (a,b,c,d,e,f) => {
+                    xform.a = a;
+                    xform.b = b;
+                    xform.c = c;
+                    xform.d = d;
+                    xform.e = e;
+                    xform.f = f;
+                    return setTransform.call(this.ctx,a,b,c,d,e,f);
+                };
+                var pt  = svg.createSVGPoint();
+                this.ctx.transformedPoint = (x,y) => {
+                    pt.x=x; pt.y=y;
+                    return pt.matrixTransform(xform.inverse());
+                }
+
+                resolve(this.ctx)
+            })
+            
         },
         toggleFullScreen(){
             

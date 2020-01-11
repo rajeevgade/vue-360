@@ -8,6 +8,8 @@
             imagePath="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car"
             fileName="iris-{index}.jpeg"
             header="Car - 36 Image Wide Product Example"
+            spinReverse
+            :autoplay=1
           />
         </div>
         <div class="col-12 mb-4 text-center">
@@ -17,6 +19,7 @@
           <p>Features include Zoom, Pan, Autoplay, Crop, Fullscreen, Reverse Spin, Show/Hide Header, and more. <a href="#">Click here for more information.</a> </p>
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
+          <h4 class="my-2 text-center">36 Images</h4>
           <Wrapper 
             :frames=36
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
@@ -24,6 +27,7 @@
           />
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
+          <h4 class="my-2 text-center">72 Images</h4>
           <Wrapper 
             :frames=72
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-72"
