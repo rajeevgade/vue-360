@@ -61,6 +61,12 @@
                         <i class="fa fa-arrows-alt" v-if="!panmode"></i>
                         <span v-else>360&deg;</span>
                     </div>
+                    <div class="v360-menu-btns" @click="prev">
+                        <i class="fa fa-chevron-left"></i>
+                    </div>
+                    <div class="v360-menu-btns" @click="next">
+                        <i class="fa fa-chevron-right"></i>
+                    </div>
                     <div class="v360-menu-btns" @click="resetPosition">
                         <i class="fa fa-redo-alt"></i>
                     </div>
@@ -732,3 +738,5 @@ export default {
     }
 }
 </script>
+
+<style scoped src="../../public/css/style.css"></style>
