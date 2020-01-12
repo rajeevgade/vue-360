@@ -12,7 +12,7 @@
             autoplay
             :loop=2
           />
-        </div>
+        </div>  
         <div class="col-12 mb-4 text-center">
           <h4>More Examples</h4>
           <p>A simple, interactive resource that can be used to provide a virtual tour of your product.</p>

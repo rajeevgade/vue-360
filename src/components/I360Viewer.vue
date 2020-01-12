@@ -55,9 +55,9 @@
                     <i class="fa fa-arrows-alt" v-if="!panmode"></i>
                     <span v-else>360&deg;</span>
                 </div>
-                <div class="menu-btns" @click="cropImage" v-if="!isMobile">
+                <!-- <div class="menu-btns" @click="cropImage" v-if="!isMobile">
                     <i class="fa fa-download"></i>
-                </div>
+                </div> -->
                 <div class="menu-btns" @click="resetPosition">
                     <i class="fa fa-redo-alt"></i>
                 </div>

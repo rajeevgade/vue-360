@@ -1,6 +1,8 @@
 {
   "name": "vue-360-viewer",
   "version": "0.1.0",
+  "author": "Rajeev R. Gade",
+  "description": "A Simple and Beautiful 360 viewer for your product",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
