@@ -7,27 +7,61 @@
 
 [Click Here for Demo](http://rajeevgade.github.io/portfolio/vue-360-viewer)
 
-## Project setup
+
+## Installation
 ```
-npm install
+npm install --save vue-360-viewer
 ```
 
-### Compiles and hot-reloads for development
+## Config
+
 ```
-npm run serve
+import VueThreeSixty from 'vue-360-viewer'
+
+Vue.use(VueThreeSixty)
+
 ```
 
-### Compiles and minifies for production
+## Example
 ```
-npm run build
+<vue-three-sixty 
+  :amount=36
+  imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
+  fileName="chair_{index}.jpg?v1"
+/>
 ```
 
-### Run your tests
-```
-npm run test
-```
+## Props
 
-### Lints and fixes files
-```
-npm run lint
-```
+| Name | Type | Description | Required | Default Value |
+| --- | --- | --- | --- | --- |
+| amount | Number | Number of images | Yes |
+| imagePath | String | Path to your image | Yes |
+| fileName | String | File name format | Yes |
+| spinReverse | Boolean | Reverse Spin | Optional | false |
+| header | Boolean | Show/Hide Header | Optional | false |
+| autoplay | Number | Autoplay your images | Optional | 24 |
+| loop | Number | Number of loops you want to autoplay | Optional | 1 |
+| boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
+
+## Roadmap
+
+- Fullscreen
+- Custom CSS Classes
+- Buttons Control
+- And a few more ...
+
+## Dependencies
+
+- vue
+- vue2-hammer
+- core-js
+
+### Contributions are welcome anytime
+
+### You can reach out to me at rajeevgade@gmail.com
+
+
+
+
+
