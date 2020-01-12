@@ -1,22 +1,20 @@
 <template>
     <div>
-        <div class="" ref="imageLibrary">
+        <div class="v360-viewer-container" ref="imageLibrary">
             
-            <div class="header" v-if="header">
-                <span class="bookTitle">{{ header }}</span>
-                <span class="title"></span>
+            <div class="v360-header" v-if="header">
+                <span class="v360-header-title">{{ header }}</span>
+                <span class="v360-header-description"></span>
             </div>
 
-            <div class="viewport" v-if="!imagesLoaded">
-                <div class="spinner-grow" role="status">
-                    <span class="sr-only">Loading...</span>
-                </div>
-                <p ref="viewPercentage" class="ml-2"></p>
+            <div class="v360-viewport" v-if="!imagesLoaded">
+                <div class="v360-spinner-grow"></div>
+                <p ref="viewPercentage" class="v360-percentage-text"></p>
             </div>
 
-            <div class="viewport" ref="viewport">
+            <div class="v360-viewport" ref="viewport">
                 <canvas 
-                    class="image-container" 
+                    class="v360-image-container" 
                     ref="imageContainer" 
                     @wheel="zoomImage"
                     v-hammer:pinch="onPinch"
@@ -24,13 +22,12 @@
                     v-hammer:pinchout="onPinchOut"
                     v-hammer:pinchin="onPinchIn"
                 ></canvas>
-                <div class="screen-toggle"></div>
-                <div class="product-box-shadow" v-if="boxShadow"></div>
+                <div class="v360-product-box-shadow" v-if="boxShadow"></div>
             </div>
 
-            <abbr title="Fullscreen Toggle">
-                <div class="fullscreen-toggle" @click="toggleFullScreen">
-                    <div class="fullscreen-toggle-btn" ref="enterFullScreenIcon">
+            <!-- <abbr title="Fullscreen Toggle">
+                <div class="v360-fullscreen-toggle" @click="toggleFullScreen">
+                    <div class="v360-fullscreen-toggle-btn" ref="enterFullScreenIcon">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                         width="100%" height="100%" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
                             <g>
@@ -41,7 +38,7 @@
                             </g>
                         </svg>
                     </div>
-                    <div class="fullscreen-toggle-btn" ref="leaveFullScreenIcon">
+                    <div class="v360-fullscreen-toggle-btn" ref="leaveFullScreenIcon">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
                             <g>
                                 <path d="M64,371.2h76.795V448H192V320H64V371.2z M140.795,140.8H64V192h128V64h-51.205V140.8z M320,448h51.2v-76.8H448V320H320
@@ -50,26 +47,27 @@
                         </svg>
                     </div>
                 </div>
-            </abbr>
+            </abbr> -->
 
-            <div id="menu-btns">
-                <div id="navigate-btns">
-                    <div class="menu-btns" @click="zoomIn">
+            <div id="v360-menu-btns">
+                <div class="v360-navigate-btns">
+                    <div class="v360-menu-btns" @click="zoomIn">
                         <i class="fa fa-search-plus"></i>
                     </div>
-                    <div class="menu-btns" @click="zoomOut">
+                    <div class="v360-menu-btns" @click="zoomOut">
                         <i class="fa fa-search-minus"></i>
                     </div>
-                    <div class="menu-btns" @click="togglePanMode" :class="(panmode) ? 'active' : ''">
+                    <div class="v360-menu-btns" @click="togglePanMode" :class="(panmode) ? 'v360-btn-active' : ''">
                         <i class="fa fa-arrows-alt" v-if="!panmode"></i>
                         <span v-else>360&deg;</span>
                     </div>
-                    <!-- <div class="menu-btns" @click="cropImage" v-if="!isMobile">
-                        <i class="fa fa-download"></i>
-                    </div> -->
-                    <div class="menu-btns" @click="resetPosition">
+                    <div class="v360-menu-btns" @click="resetPosition">
                         <i class="fa fa-redo-alt"></i>
                     </div>
+                    <!-- <div class="v360-menu-btns" @click="toggleFullScreen">
+                        <i class="fa fa-expand" v-if="!isFullScreen"></i>
+                        <i class="fa fa-compress" v-else></i>
+                    </div> -->
                 </div>
             </div>
 
@@ -715,14 +713,14 @@ export default {
             
             if(!this.isFullScreen){
                 //exit full screen
-                this.$refs.imageLibrary.classList.add('main')
-                this.$refs.imageLibrary.classList.add('fullscreen')
+                this.$refs.imageLibrary.classList.add('v360-main')
+                this.$refs.imageLibrary.classList.add('v360-fullscreen')
                 this.$refs.enterFullScreenIcon.style.display = 'none'
                 this.$refs.leaveFullScreenIcon.style.display = 'block'
             }else{
                 //enter full screen
-                this.$refs.imageLibrary.classList.remove('main')
-                this.$refs.imageLibrary.classList.remove('fullscreen')
+                this.$refs.imageLibrary.classList.remove('v360-main')
+                this.$refs.imageLibrary.classList.remove('v360-fullscreen')
                 this.$refs.enterFullScreenIcon.style.display = 'block'
                 this.$refs.leaveFullScreenIcon.style.display = 'none'
             }
@@ -734,9 +732,3 @@ export default {
     }
 }
 </script>
-
-<style>
-    .menu-toggle-btn, .fullscreen-toggle-btn{
-        background-color: #fff;
-    }
-</style>
