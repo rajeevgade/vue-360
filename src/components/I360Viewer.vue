@@ -1,69 +1,79 @@
 <template>
-    <div class="" ref="imageLibrary">
-        <div class="header" v-if="header">
-            <span class="bookTitle">{{ header }}</span>
-            <span class="title"></span>
-        </div>
+    <div>
+        <div class="" ref="imageLibrary">
+            
+            <div class="header" v-if="header">
+                <span class="bookTitle">{{ header }}</span>
+                <span class="title"></span>
+            </div>
 
-        <div class="viewport" ref="viewport">
-            <canvas 
-                class="image-container" 
-                ref="imageContainer" 
-                @wheel="zoomImage"
-                v-hammer:pinch="onPinch"
-                v-hammer:pinchend="onPinch"
-                v-hammer:pinchout="onPinchOut"
-                v-hammer:pinchin="onPinchIn"
-            ></canvas>
-            <div class="screen-toggle"></div>
-            <div class="product-box-shadow" v-if="boxShadow"></div>
-        </div>
-
-        <abbr title="Fullscreen Toggle">
-            <div class="fullscreen-toggle" @click="toggleFullScreen">
-                <div class="fullscreen-toggle-btn" ref="enterFullScreenIcon">
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                    width="100%" height="100%" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-                        <g>
-                            <polygon points="396.795,396.8 320,396.8 320,448 448,448 448,320 396.795,320 	"/>
-                            <polygon points="396.8,115.205 396.8,192 448,192 448,64 320,64 320,115.205 	"/>
-                            <polygon points="115.205,115.2 192,115.2 192,64 64,64 64,192 115.205,192 	"/>
-                            <polygon points="115.2,396.795 115.2,320 64,320 64,448 192,448 192,396.795 	"/>
-                        </g>
-                    </svg>
+            <div class="viewport" v-if="!imagesLoaded">
+                <div class="spinner-grow" role="status">
+                    <span class="sr-only">Loading...</span>
                 </div>
-                <div class="fullscreen-toggle-btn" ref="leaveFullScreenIcon">
-                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-                        <g>
-                            <path d="M64,371.2h76.795V448H192V320H64V371.2z M140.795,140.8H64V192h128V64h-51.205V140.8z M320,448h51.2v-76.8H448V320H320
-                                V448z M371.2,140.8V64H320v128h128v-51.2H371.2z"/>
-                        </g>
-                    </svg>
+                <p ref="viewPercentage" class="ml-2"></p>
+            </div>
+
+            <div class="viewport" ref="viewport">
+                <canvas 
+                    class="image-container" 
+                    ref="imageContainer" 
+                    @wheel="zoomImage"
+                    v-hammer:pinch="onPinch"
+                    v-hammer:pinchend="onPinch"
+                    v-hammer:pinchout="onPinchOut"
+                    v-hammer:pinchin="onPinchIn"
+                ></canvas>
+                <div class="screen-toggle"></div>
+                <div class="product-box-shadow" v-if="boxShadow"></div>
+            </div>
+
+            <abbr title="Fullscreen Toggle">
+                <div class="fullscreen-toggle" @click="toggleFullScreen">
+                    <div class="fullscreen-toggle-btn" ref="enterFullScreenIcon">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                        width="100%" height="100%" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+                            <g>
+                                <polygon points="396.795,396.8 320,396.8 320,448 448,448 448,320 396.795,320 	"/>
+                                <polygon points="396.8,115.205 396.8,192 448,192 448,64 320,64 320,115.205 	"/>
+                                <polygon points="115.205,115.2 192,115.2 192,64 64,64 64,192 115.205,192 	"/>
+                                <polygon points="115.2,396.795 115.2,320 64,320 64,448 192,448 192,396.795 	"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="fullscreen-toggle-btn" ref="leaveFullScreenIcon">
+                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
+                            <g>
+                                <path d="M64,371.2h76.795V448H192V320H64V371.2z M140.795,140.8H64V192h128V64h-51.205V140.8z M320,448h51.2v-76.8H448V320H320
+                                    V448z M371.2,140.8V64H320v128h128v-51.2H371.2z"/>
+                            </g>
+                        </svg>
+                    </div>
+                </div>
+            </abbr>
+
+            <div id="menu-btns">
+                <div id="navigate-btns">
+                    <div class="menu-btns" @click="zoomIn">
+                        <i class="fa fa-search-plus"></i>
+                    </div>
+                    <div class="menu-btns" @click="zoomOut">
+                        <i class="fa fa-search-minus"></i>
+                    </div>
+                    <div class="menu-btns" @click="togglePanMode" :class="(panmode) ? 'active' : ''">
+                        <i class="fa fa-arrows-alt" v-if="!panmode"></i>
+                        <span v-else>360&deg;</span>
+                    </div>
+                    <!-- <div class="menu-btns" @click="cropImage" v-if="!isMobile">
+                        <i class="fa fa-download"></i>
+                    </div> -->
+                    <div class="menu-btns" @click="resetPosition">
+                        <i class="fa fa-redo-alt"></i>
+                    </div>
                 </div>
             </div>
-        </abbr>
 
-        <div id="menu-btns">
-            <div id="navigate-btns">
-                <div class="menu-btns" @click="zoomIn">
-                    <i class="fa fa-search-plus"></i>
-                </div>
-                <div class="menu-btns" @click="zoomOut">
-                    <i class="fa fa-search-minus"></i>
-                </div>
-                <div class="menu-btns" @click="togglePanMode" :class="(panmode) ? 'active' : ''">
-                    <i class="fa fa-arrows-alt" v-if="!panmode"></i>
-                    <span v-else>360&deg;</span>
-                </div>
-                <!-- <div class="menu-btns" @click="cropImage" v-if="!isMobile">
-                    <i class="fa fa-download"></i>
-                </div> -->
-                <div class="menu-btns" @click="resetPosition">
-                    <i class="fa fa-redo-alt"></i>
-                </div>
-            </div>
         </div>
-
     </div>
 </template>
 
@@ -72,13 +82,15 @@
 export default {
     name: 'I360Viewer',
     props: {
-        images: {
-            type: Array,
+        imagePath: {
+            type: String,
             require: true,
+            default: ''
         },
-        imageData: {
-            type: Array,
+        fileName: {
+            type: String,
             require: true,
+            default: ''
         },
         header: {
             type: String,
@@ -144,6 +156,8 @@ export default {
             isMobile: false,
             currentLoop: 0,
             loopTimeoutId: 0,
+            images: [],
+            imageData: [],
         }
     },
     watch: {
@@ -162,13 +176,13 @@ export default {
     },
     mounted(){
         //this.toggleFullScreen()
-        this.initData()
+        this.fetchData()
     },
     methods: {
         initData(){
             this.checkMobile()
             this.loadInitialImage()
-
+            
             this.canvas = this.$refs.imageContainer
             this.ctx = this.canvas.getContext('2d')
             this.attachEvents();
@@ -178,6 +192,69 @@ export default {
             if(this.autoplay){
                 this.play()
             }
+        },
+        fetchData(){
+
+            for(let i=1; i <= this.amount; i++){
+                const fileName = this.fileName.replace('{index}', i);
+                const filePath = `${this.imagePath}/${fileName}`
+                this.imageData.push(filePath)
+            }
+
+            this.preloadImages()
+        },
+        preloadImages(){
+            if (this.imageData.length) {
+                try {
+                    this.amount = this.imageData.length;
+                    this.imageData.forEach(src => {
+                        this.addImage(src);
+                    });
+                } catch (error) {
+                    console.error(`Something went wrong while loading images: ${error.message}`);
+                }
+            } else {
+                console.log('No Images Found')
+            }
+        },
+        addImage(resultSrc){
+            const image = new Image();
+
+            image.src = resultSrc;
+            //image.crossOrigin='anonymous'
+            image.onload = this.onImageLoad.bind(this);
+            image.onerror = this.onImageLoad.bind(this);
+
+            this.images.push(image);
+        },
+        onImageLoad(event) {
+            const percentage = Math.round(this.loadedImages / this.amount * 100);
+
+            this.loadedImages += 1;
+            this.updatePercentageInLoader(percentage);
+
+            if (this.loadedImages === this.amount) {
+                this.onAllImagesLoaded(event);
+            } else if (this.loadedImages === 1) {
+                //this.onFirstImageLoaded(event);
+                console.log('load first image')
+            }
+        },
+        updatePercentageInLoader(percentage) {
+            /* if (this.loader) {
+                this.loader.style.width = percentage + '%';
+            }
+
+            if (this.view360Icon) {
+                this.view360Icon.innerText = percentage + '%';
+            } */
+
+            this.$refs.viewPercentage.innerHTML = percentage + '%';
+            //console.log(percentage + '%')
+        },
+        onAllImagesLoaded(e){
+            this.imagesLoaded = true
+            this.initData()
         },
         play(){
             this.loopTimeoutId = window.setInterval(() => this.loopImages(), 100);
