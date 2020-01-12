@@ -24,7 +24,6 @@
 <script>
 
 import I360Viewer from './I360Viewer.vue'
-import AppConfig from '../config'
 
 export default {
   name: 'Wrapper',
