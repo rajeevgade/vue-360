@@ -1,7 +1,10 @@
 {
   "name": "vue-360-viewer",
   "version": "0.1.0",
-  "author": "Rajeev R. Gade",
+  "author": {
+    "name": "Rajeev R. Gade",
+    "email": "rajeevgade@gmail.com"
+  },
   "description": "A Simple and Beautiful 360 viewer for your product",
   "license": "MIT",
   "main": "./dist/index.js",

@@ -31,6 +31,11 @@ Vue.use(VueThreeSixty)
 />
 ```
 
+- The icons used in the demo are from fontawesome. Add the following in your header to display the icons.
+`
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
+`
+
 ## Props
 
 | Name | Type | Description | Required | Default Value |
@@ -46,9 +51,10 @@ Vue.use(VueThreeSixty)
 
 ## Roadmap
 
+- Hotspots
 - Fullscreen
 - Custom CSS Classes
-- Buttons Control
+- Custom Buttons
 - And a few more ...
 
 ## Dependencies
@@ -56,12 +62,4 @@ Vue.use(VueThreeSixty)
 - vue
 - vue2-hammer
 - core-js
-
-### Contributions are welcome anytime
-
-### You can reach out to me at rajeevgade@gmail.com
-
-
-
-
 
