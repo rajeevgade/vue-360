@@ -48,6 +48,7 @@ Vue.use(VueThreeSixty)
 | autoplay | Number | Autoplay your images | Optional | 24 |
 | loop | Number | Number of loops you want to autoplay | Optional | 1 |
 | boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
+| buttonClass | String | Apply Styling to Buttons | Optional (light/dark) | light |
 
 
 ## Roadmap
@@ -63,4 +64,4 @@ Vue.use(VueThreeSixty)
 - vue
 - vue2-hammer
 - core-js
-- Images from [Cloud Image](https://www.cloudimage.io/)
+- Images Credits: [Cloud Image](https://www.cloudimage.io/)
