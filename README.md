@@ -63,4 +63,4 @@ Vue.use(VueThreeSixty)
 - vue
 - vue2-hammer
 - core-js
-
+- Images from [Cloud Image](https://www.cloudimage.io/)

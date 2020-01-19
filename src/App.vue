@@ -13,11 +13,11 @@
             :loop=2
           />
         </div>  
-        <div class="col-12 mb-4 text-center">
+        <div class="col-12 mb-4 text-center card">
           <h4>More Examples</h4>
           <p>A simple, interactive resource that can be used to provide a virtual tour of your product.</p>
-          <p>100% Mobile Responsive</p>
-          <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Fullscreen, Reverse Spin, Show/Hide Header, and more. <a href="#">Click here for more information.</a> </p>
+          <p>100% Mobile Responsive with Touch Actions</p>
+          <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Reverse Spin, Show/Hide Header, and more. <a href="https://github.com/rajeevgade/vue-360-viewer">Click here for more information.</a> </p>
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
           <h4 class="my-2 text-center">36 Images</h4>
