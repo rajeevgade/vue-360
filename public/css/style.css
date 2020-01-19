@@ -173,15 +173,22 @@ root {
     z-index: 150;
 }
 
+.light{
+    background-color: #fff !important;
+}
+
+.dark{
+    background-color: #000 !important;
+}
+
 .v360-menu-btns {
-    background-color: #999;
+    /* background-color: #999; */
     width: auto;
     min-height: 20px;
     margin: 5px 5px;
     padding: 5px 10px;
     border-radius: 5px;
     outline: none;
-    color: #fff;
     font-size: 1.3em;
     text-align: center;
     line-height: 1em;
@@ -195,9 +202,23 @@ root {
 .v360-btn-active{
     background-color: #000;
 }
+
+.light .v360-menu-btns {
+    color: #000;
+}
+
+.dark .v360-menu-btns {
+    color: #fff;
+}
   
-.v360-menu-btns:hover {
+.light .v360-menu-btns:hover {
+    color: #fff;
     background-color: #000;
+}
+
+.dark .v360-menu-btns:hover {
+    color: #000;
+    background-color: #fff;
 }
 
 .v360-main {

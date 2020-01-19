@@ -11,6 +11,7 @@
             spinReverse
             autoplay
             :loop=2
+            buttonClass="dark"
           />
         </div>  
         <div class="col-12 mb-4 text-center card">
@@ -25,6 +26,7 @@
             :amount=36
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
             fileName="chair_{index}.jpg?v1"
+            buttonClass="dark"
           />
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">

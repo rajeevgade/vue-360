@@ -55,7 +55,7 @@
                 </div>
             </abbr> -->
 
-            <div id="v360-menu-btns">
+            <div id="v360-menu-btns" :class="buttonClass">
                 <div class="v360-navigate-btns">
                     <div class="v360-menu-btns" @click="zoomIn">
                         <i class="fa fa-search-plus"></i>
@@ -130,6 +130,11 @@ export default {
             type: Boolean,
             require: false,
             default: false
+        },
+        buttonClass: {
+            type: String,
+            require: false,
+            default: 'light'
         }
     },
     data(){
