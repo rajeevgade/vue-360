@@ -3,8 +3,6 @@
 
 ## Demo
 
-![Preview](http://rajeevgade.github.io/images/portfolio/vue-360-viewer.gif)
-
 [Click Here for Demo](http://rajeevgade.github.io/portfolio/vue-360-viewer)
 
 
