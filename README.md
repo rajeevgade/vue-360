@@ -32,9 +32,9 @@ Vue.use(VueThreeSixty)
 ```
 
 - The icons used in the demo are from fontawesome. Add the following in your header to display the icons.
-`
+```
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
-`
+```
 
 ## Props
 
