@@ -49,6 +49,7 @@ Vue.use(VueThreeSixty)
 | loop | Number | Number of loops you want to autoplay | Optional | 1 |
 | boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
 
+
 ## Roadmap
 
 - Hotspots
