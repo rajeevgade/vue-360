@@ -22,7 +22,13 @@
                     v-hammer:pinchout="onPinchOut"
                     v-hammer:pinchin="onPinchIn"
                 ></canvas>
-                <div class="v360-product-box-shadow" v-if="boxShadow"></div>
+                <div class="v360-product-box-shadow" 
+                    v-if="boxShadow" @wheel="zoomImage"
+                    v-hammer:pinch="onPinch"
+                    v-hammer:pinchend="onPinch"
+                    v-hammer:pinchout="onPinchOut"
+                    v-hammer:pinchin="onPinchIn"
+                ></div>
             </div>
 
             <!-- <abbr title="Fullscreen Toggle">
@@ -281,23 +287,26 @@ export default {
                 else{
                     this.currentLoop++
                     
-                    if(this.spinReverse) 
-                        this.prev() 
-                    else
-                        this.next()
+                    this.next()
                 }
             }
             else{
-                (this.spinReverse) ? this.prev() : this.next()
+                this.next()
             }
         },
         next() {
-            this.moveActiveIndexUp(1);
-            this.update();
+            (this.spinReverse) ? this.turnLeft() : this.turnRight()
         },
         prev() {
+            (this.spinReverse) ? this.turnRight() : this.turnLeft()
+        },
+        turnLeft(){
             this.moveActiveIndexDown(1);
-            this.update();
+            this.update(); 
+        },
+        turnRight(){
+            this.moveActiveIndexUp(1);
+            this.update(); 
         },
         loadImages(){
             console.log('load image')
