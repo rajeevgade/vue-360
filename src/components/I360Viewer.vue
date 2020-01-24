@@ -76,10 +76,6 @@
                     <div class="v360-menu-btns" @click="resetPosition">
                         <i class="fa fa-redo-alt"></i>
                     </div>
-                    <!-- <div class="v360-menu-btns" @click="toggleFullScreen">
-                        <i class="fa fa-expand" v-if="!isFullScreen"></i>
-                        <i class="fa fa-compress" v-else></i>
-                    </div> -->
                 </div>
             </div>
 
@@ -307,11 +303,9 @@ export default {
         },
         turnLeft(){
             this.moveActiveIndexDown(1);
-            this.update(); 
         },
         turnRight(){
             this.moveActiveIndexUp(1);
-            this.update(); 
         },
         loadImages(){
             console.log('load image')
@@ -406,6 +400,7 @@ export default {
             this.currentTopPosition -= this.customOffset;
         },
         resetPosition(){
+            this.activeImage = 1
             this.setImage(true)
         },
         setImage(cached = false){
@@ -464,39 +459,6 @@ export default {
                 this.trackTransforms(this.ctx)
             }
 
-        },
-        cropImage(){
-            let croppedCanvas = this.canvas
-            let newCanvas = document.createElement('canvas')
-            let croppedCtx = newCanvas.getContext('2d')
-            newCanvas.width = croppedCanvas.width
-            newCanvas.height = croppedCanvas.height
-            let newImage = new Image()
-            newImage.src = croppedCanvas.toDataURL();
-            newImage.onload = () => {
-                croppedCtx.drawImage(newImage, 0, 0, newCanvas.width, newCanvas.height);
-                let canvasImage = newCanvas.toDataURL();
-                let xhr = new XMLHttpRequest();
-                xhr.responseType = 'blob';
-                xhr.onload = function () {
-                    let a = document.createElement('a');
-                    a.href = window.URL.createObjectURL(xhr.response);
-                    a.download = 'croppedImage.jpg';
-                    a.style.display = 'none';
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove()
-                };
-                xhr.open('GET', canvasImage);
-                xhr.send();
-            }
-        },
-        lpad(str, padString, length){
-            str = str.toString();
-
-            while (str.length < length)
-                str = padString + str;
-            return str;
         },
         onMove(pageX){
             if (pageX - this.movementStart >= this.speedFactor) {
