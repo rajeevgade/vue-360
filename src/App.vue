@@ -20,22 +20,24 @@
           <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Reverse Spin, Show/Hide Header, and more. <a href="https://github.com/rajeevgade/vue-360-viewer">Click here for more information.</a> </p>
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
-          <h4 class="my-2 text-center">36 Images</h4>
+          <!-- <h4 class="my-2 text-center">36 Images</h4> -->
           <vue-three-sixty 
             :amount=36
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
             fileName="chair_{index}.jpg?v1"
+            header="36 Images"
             buttonClass="dark"
             :hotspots=hotspots1
           />
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
-          <h4 class="my-2 text-center">72 Images - Box Shadow</h4>
+          <!-- <h4 class="my-2 text-center">72 Images - Box Shadow</h4> -->
           <vue-three-sixty
             :amount=72
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-72"
             fileName="chair_{index}.jpg?v1"
             boxShadow
+            header="72 Images - Box Shadow"
             :hotspots=hotspots1
           />
         </div>

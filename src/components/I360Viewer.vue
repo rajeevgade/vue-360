@@ -2,7 +2,7 @@
     <div>
         <div class="v360-viewer-container" ref="imageLibrary" :id="identifier">
             
-            <div class="v360-header" v-if="header">
+            <div class="v360-header" v-if="header" :class="(buttonClass == 'dark') ? 'text-light bg-dark' : 'text-dark bg-light'">
                 <span class="v360-header-title">{{ header }}</span>
                 <span class="v360-header-description"></span>
             </div>
@@ -32,25 +32,12 @@
             </div>
 
             <abbr title="Fullscreen Toggle">
-                <div class="v360-fullscreen-toggle" @click="toggleFullScreen">
+                <div class="v360-fullscreen-toggle text-center" @click="toggleFullScreen">
                     <div class="v360-fullscreen-toggle-btn" ref="enterFullScreenIcon">
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                        width="100%" height="100%" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-                            <g>
-                                <polygon points="396.795,396.8 320,396.8 320,448 448,448 448,320 396.795,320 	"/>
-                                <polygon points="396.8,115.205 396.8,192 448,192 448,64 320,64 320,115.205 	"/>
-                                <polygon points="115.205,115.2 192,115.2 192,64 64,64 64,192 115.205,192 	"/>
-                                <polygon points="115.2,396.795 115.2,320 64,320 64,448 192,448 192,396.795 	"/>
-                            </g>
-                        </svg>
+                        <i class="fas fa-expand text-lg" :class="(buttonClass == 'dark') ? 'text-light' : 'text-dark'"></i>
                     </div>
                     <div class="v360-fullscreen-toggle-btn" ref="leaveFullScreenIcon">
-                        <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="30px" height="30px" viewBox="0 0 512 512" enable-background="new 0 0 512 512" xml:space="preserve">
-                            <g>
-                                <path d="M64,371.2h76.795V448H192V320H64V371.2z M140.795,140.8H64V192h128V64h-51.205V140.8z M320,448h51.2v-76.8H448V320H320
-                                    V448z M371.2,140.8V64H320v128h128v-51.2H371.2z"/>
-                            </g>
-                        </svg>
+                         <i class="fas fa-compress text-lg" :class="(buttonClass == 'dark') ? 'text-light' : 'text-dark'"></i>
                     </div>
                 </div>
             </abbr>

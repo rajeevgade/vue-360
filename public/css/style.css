@@ -40,7 +40,7 @@ root {
     font-size: 1.5em;
     text-align: center;
     font-weight: bold;
-    text-shadow: 1px 1px #000000;
+    /* text-shadow: 1px 1px #000000; */
     flex: 0 1 auto;
 }
 
@@ -108,8 +108,8 @@ root {
     height: 30px;
     margin: 15px;
     position: absolute;
-    color: #999;
-    fill: #999;
+    /* color: #999;
+    fill: #999; */
     float: right;
     cursor: pointer;
     top: 0;
@@ -260,8 +260,9 @@ root {
     box-shadow: rgb(34, 34, 34) 0px 0px 100px inset;
 }
 
-.v360-fullscreen-toggle-btn{
-    background-color: #fff;
+.v360-fullscreen-toggle-btn i{
+    /* background-color: #fff; */
+    font-size: 20px;
 }
 .v360-spinner-grow{
     display: inline-block;
