@@ -3,12 +3,14 @@
 
 ## Demo
 
+![Preview](https://www.techsolate.com/vue-360-viewer/demo.gif)
+
 [Click Here for Demo](http://rajeevgade.github.io/portfolio/vue-360-viewer)
 
 
 ## Installation
 ```
-npm install --save vue-360-viewer
+npm install vue-360-viewer
 ```
 
 ## Config
@@ -52,6 +54,7 @@ Vue.use(VueThreeSixty)
 ## Roadmap
 
 - Hotspots
+- Lazyloading
 - Custom CSS Classes
 - Custom Buttons
 - And a few more ...
