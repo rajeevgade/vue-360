@@ -166,7 +166,7 @@ root {
     width: 100%;
     padding: 5px 0;
     text-align: center;
-    /* position: absolute; */
+    position: absolute;
     bottom: 0;
     display: flex;
     justify-content: center;
