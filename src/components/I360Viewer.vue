@@ -31,7 +31,7 @@
                 ></div>
             </div>
 
-            <!-- <abbr title="Fullscreen Toggle">
+            <abbr title="Fullscreen Toggle">
                 <div class="v360-fullscreen-toggle" @click="toggleFullScreen">
                     <div class="v360-fullscreen-toggle-btn" ref="enterFullScreenIcon">
                         <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -53,7 +53,7 @@
                         </svg>
                     </div>
                 </div>
-            </abbr> -->
+            </abbr>
 
             <div id="v360-menu-btns" :class="buttonClass">
                 <div class="v360-navigate-btns">
@@ -195,10 +195,33 @@ export default {
         panmode(value){
             this.attachEvents()
         },
+        isFullScreen(value){
+            if(!value){
+                //exit full screen
+                /* this.$refs.imageLibrary.classList.add('v360-main')
+                this.$refs.imageLibrary.classList.add('v360-fullscreen') */
+                this.exitFullScreen()
+                this.$refs.enterFullScreenIcon.style.display = 'block'
+                this.$refs.leaveFullScreenIcon.style.display = 'none'
+            }else{
+                //enter full screen
+                this.openFullScreen(this.$refs.imageLibrary)
+                /* this.$refs.imageLibrary.classList.remove('v360-main')
+                this.$refs.imageLibrary.classList.remove('v360-fullscreen') */
+                this.$refs.enterFullScreenIcon.style.display = 'none'
+                this.$refs.leaveFullScreenIcon.style.display = 'block'
+                
+            }
+            this.setImage()
+        }
     },
     mounted(){
         //this.toggleFullScreen()
         this.fetchData()
+        document.addEventListener('fullscreenchange', this.exitHandler);
+        document.addEventListener('webkitfullscreenchange', this.exitHandler);
+        document.addEventListener('mozfullscreenchange', this.exitHandler);
+        document.addEventListener('MSFullscreenChange', this.exitHandler);
     },
     methods: {
         initData(){
@@ -763,25 +786,33 @@ export default {
             
         },
         toggleFullScreen(){
-            
-            if(!this.isFullScreen){
-                //exit full screen
-                this.$refs.imageLibrary.classList.add('v360-main')
-                this.$refs.imageLibrary.classList.add('v360-fullscreen')
-                this.$refs.enterFullScreenIcon.style.display = 'none'
-                this.$refs.leaveFullScreenIcon.style.display = 'block'
-            }else{
-                //enter full screen
-                this.$refs.imageLibrary.classList.remove('v360-main')
-                this.$refs.imageLibrary.classList.remove('v360-fullscreen')
-                this.$refs.enterFullScreenIcon.style.display = 'block'
-                this.$refs.leaveFullScreenIcon.style.display = 'none'
-            }
+            console.log(`this.isFullScreen: ${this.isFullScreen}`)
 
             this.isFullScreen = !this.isFullScreen
-
-            this.setImage(true)
-        }
+        },
+        openFullScreen(elem){
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            } else if (elem.mozRequestFullScreen) { /* Firefox */
+                elem.mozRequestFullScreen();
+            } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) { /* IE/Edge */
+                elem.msRequestFullscreen();
+            }
+        },
+        exitFullScreen() {
+            if (document.exitFullScreen) return document.exitFullScreen();
+            else if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
+            else if (document.msExitFullscreen) return document.msExitFullscreen();
+            else if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
+        },
+        exitHandler() {
+            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
+                ///fire your event
+                this.isFullScreen = false
+            }
+        }  
     }
 }
 </script>

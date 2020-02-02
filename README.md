@@ -52,7 +52,6 @@ Vue.use(VueThreeSixty)
 ## Roadmap
 
 - Hotspots
-- Fullscreen
 - Custom CSS Classes
 - Custom Buttons
 - And a few more ...
