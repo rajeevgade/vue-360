@@ -1,6 +1,6 @@
 {
-  "name": "vue-360-viewer",
-  "version": "1.0.5",
+  "name": "@rajeevgade/vue-360-viewer",
+  "version": "1.0.2",
   "author": {
     "name": "Rajeev R. Gade",
     "email": "rajeevgade@gmail.com"
@@ -21,6 +21,7 @@
   ],
   "dependencies": {
     "core-js": "^3.4.4",
+    "uuid": "^3.4.0",
     "vue": "^2.6.10",
     "vue2-hammer": "^2.1.2"
   },

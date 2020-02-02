@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="v360-viewer-container" ref="imageLibrary">
+        <div class="v360-viewer-container" ref="imageLibrary" :id="identifier">
             
             <div class="v360-header" v-if="header">
                 <span class="v360-header-title">{{ header }}</span>
@@ -84,6 +84,7 @@
 </template>
 
 <script>
+const uuidv1 = require('uuid/v1');
 
 export default {
     name: 'I360Viewer',
@@ -131,6 +132,16 @@ export default {
             type: String,
             require: false,
             default: 'light'
+        },
+        hotspots: {
+            type: Array,
+            require: true,
+            default: () => []
+        },
+        identifier: {
+            type: String,
+            require: true,
+            default: () => uuidv1()
         }
     },
     data(){
@@ -400,6 +411,7 @@ export default {
             this.currentTopPosition -= this.customOffset;
         },
         resetPosition(){
+            this.currentScale = 1
             this.activeImage = 1
             this.setImage(true)
         },
@@ -436,7 +448,8 @@ export default {
         },
         redraw(){
 
-            try{
+            try {
+
                 let p1 = this.ctx.transformedPoint(0,0);
                 let p2 = this.ctx.transformedPoint(this.canvas.width,this.canvas.height)
 
@@ -453,12 +466,68 @@ export default {
                 //center image
                 this.ctx.drawImage(this.currentCanvasImage, this.currentLeftPosition, this.currentTopPosition, this.currentCanvasImage.width, this.currentCanvasImage.height,
                             centerShift_x,centerShift_y,this.currentCanvasImage.width*ratio, this.currentCanvasImage.height*ratio);  
+
+                this.addHotspots()
+
             }
             catch(e){
-                //console.log(e)
                 this.trackTransforms(this.ctx)
             }
 
+        },
+        addHotspots(){
+            this.clearHotspots()
+
+            let currentImageHotspots = this.hotspots.filter(h => h.frame == this.activeImage)
+
+            for(let c in currentImageHotspots){
+                let hotspotElement = currentImageHotspots[c]
+                
+                let hotspotPositionX, hotspotPositionY
+                
+                if(this.canvas.width > this.$refs.viewport.clientWidth){
+                    hotspotPositionX = hotspotElement.x * this.$refs.viewport.clientWidth * this.currentScale
+                    hotspotPositionY = hotspotElement.y * this.$refs.viewport.clientHeight * this.currentScale
+                }else{
+                    hotspotPositionX = hotspotElement.x * this.canvas.width * this.currentScale
+                    hotspotPositionY = hotspotElement.y * this.canvas.height * this.currentScale
+                }
+                
+                let divElement = document.createElement('div')
+                let spanElement = document.createElement('span')
+                let imgElement = document.createElement('img')
+                
+                imgElement.className = 'hotspot-icon'
+                imgElement.src = hotspotElement.icon
+                spanElement.className = 'tooltiptext'
+                spanElement.innerHTML = hotspotElement.text
+                divElement.className = 'tooltip'
+                divElement.style.left = hotspotPositionX + 'px'
+                divElement.style.top = hotspotPositionY + 'px'
+                divElement.appendChild(imgElement)
+                divElement.appendChild(spanElement)
+
+                imgElement.addEventListener('click', (e) => {
+                    e.preventDefault()
+                    console.log('show edit hotspot form')
+                    this.selectedHotspot = hotspotElement
+                    this.openHotspotForm(true)
+                })
+
+                if(hotspotElement.action){
+                    console.log('add this function: ' + hotspotElement.action)
+                }
+                
+                this.$refs.viewport.appendChild(divElement)
+                //console.log('draw')
+                //this.ctx.drawImage(this.currentCanvasImage, hotspotElement.x*this.canvas.width, hotspotElement.y*this.canvas.height, 10, 10)
+            }
+        },
+        clearHotspots(){
+            let hotspotButtons = document.getElementById(this.identifier).querySelectorAll('.tooltip')
+            
+            if(hotspotButtons.length)
+                hotspotButtons.forEach(element => element.remove())
         },
         onMove(pageX){
             if (pageX - this.movementStart >= this.speedFactor) {

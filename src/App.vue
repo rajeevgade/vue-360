@@ -7,10 +7,9 @@
             :amount=36
             imagePath="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car"
             fileName="iris-{index}.jpeg"
-            header="36 Images - Autoplay (2 loops) - Reverse Spin"
+            header="36 Images - Autoplay (1 loop) - Reverse Spin"
             spinReverse
             autoplay
-            :loop=2
             buttonClass="dark"
           />
         </div>  
@@ -27,6 +26,7 @@
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
             fileName="chair_{index}.jpg?v1"
             buttonClass="dark"
+            :hotspots=hotspots1
           />
         </div>
         <div class="col-12 col-md-6 mb-4 card p-0">
@@ -36,6 +36,7 @@
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-72"
             fileName="chair_{index}.jpg?v1"
             boxShadow
+            :hotspots=hotspots1
           />
         </div>
       </div>
@@ -52,6 +53,30 @@ export default {
   name: 'app',
   mounted() {
     this.disableZoomin();
+  },
+  data(){
+    return {
+      hotspots1: [
+        {
+          x: 0.48,
+          y: 0.54,
+          frame: 1,
+          action: null,
+          icon: 'icons/info.svg',
+          id: 1,
+          text: 'Hotspot 1'
+        },
+        {
+          x: 0.6,
+          y: 0.4,
+          frame: 1,
+          action: null,
+          icon: 'icons/plus.svg',
+          id: 2,
+          text: 'Hotspot 2'
+        },
+      ]
+    }
   },
   methods: {
     disableZoomin(){
@@ -72,3 +97,10 @@ export default {
   }
 }
 </script>
+
+<style>
+    .hotspot-icon{
+        width: 32px;
+        height: 32px;
+    }
+</style>
