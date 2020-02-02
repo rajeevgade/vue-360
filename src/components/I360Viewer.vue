@@ -44,6 +44,10 @@
 
             <div id="v360-menu-btns" :class="buttonClass">
                 <div class="v360-navigate-btns">
+                    <div class="v360-menu-btns" @click="togglePlay" :class="(playing) ? 'v360-btn-active' : ''">
+                        <i class="fa fa-play" v-if="!playing"></i>
+                        <i class="fa fa-pause" v-else></i>
+                    </div>
                     <div class="v360-menu-btns" @click="zoomIn">
                         <i class="fa fa-search-plus"></i>
                     </div>
@@ -51,7 +55,7 @@
                         <i class="fa fa-search-minus"></i>
                     </div>
                     <div class="v360-menu-btns" @click="togglePanMode" :class="(panmode) ? 'v360-btn-active' : ''">
-                        <i class="fa fa-arrows-alt" v-if="!panmode"></i>
+                        <i class="fa fa-hand-paper" v-if="!panmode"></i>
                         <span v-else>360&deg;</span>
                     </div>
                     <div class="v360-menu-btns" @click="prev">
@@ -167,6 +171,7 @@ export default {
             loopTimeoutId: 0,
             images: [],
             imageData: [],
+            playing: false
         }
     },
     watch: {
@@ -200,6 +205,13 @@ export default {
                 
             }
             this.setImage()
+        },
+        playing(value){
+            if(value){
+                this.play()
+            }else{
+                this.stop()
+            }
         }
     },
     mounted(){
@@ -221,9 +233,7 @@ export default {
             window.addEventListener('resize', this.resizeWindow);
             this.resizeWindow()
 
-            if(this.autoplay){
-                this.play()
-            }
+            this.playing = this.autoplay
         },
         fetchData(){
 
@@ -288,17 +298,22 @@ export default {
             this.imagesLoaded = true
             this.initData()
         },
+        togglePlay(){
+            this.playing = !this.playing
+        },
         play(){
             this.loopTimeoutId = window.setInterval(() => this.loopImages(), 100);
         },
         onSpin() {
-            if (this.autoplay || this.loopTimeoutId) {
+            if (this.playing || this.loopTimeoutId) {
                 this.stop();
-                this.autoplay = false;
             }
         },
         stop() {
-            if (this.bottomCircle) this.show360ViewCircleIcon();
+            if(this.activeImage == 1){
+                this.currentLoop = 0
+            }
+            this.playing = false;
             window.clearTimeout(this.loopTimeoutId);
         },
         loopImages() {
