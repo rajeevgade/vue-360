@@ -486,11 +486,13 @@ export default {
                 let hotspotPositionX, hotspotPositionY
                 
                 if(this.canvas.width > this.$refs.viewport.clientWidth){
-                    hotspotPositionX = hotspotElement.x * this.$refs.viewport.clientWidth * this.currentScale
-                    hotspotPositionY = hotspotElement.y * this.$refs.viewport.clientHeight * this.currentScale
+                    /* hotspotPositionX = hotspotElement.x * this.$refs.viewport.clientWidth * this.currentScale
+                    hotspotPositionY = hotspotElement.y * this.$refs.viewport.clientHeight * this.currentScale */
+                    hotspotPositionX = hotspotElement.x * this.$refs.viewport.clientWidth
+                    hotspotPositionY = hotspotElement.y * this.$refs.viewport.clientHeight
                 }else{
-                    hotspotPositionX = hotspotElement.x * this.canvas.width * this.currentScale
-                    hotspotPositionY = hotspotElement.y * this.canvas.height * this.currentScale
+                    hotspotPositionX = hotspotElement.x * this.canvas.width
+                    hotspotPositionY = hotspotElement.y * this.canvas.height
                 }
                 
                 let divElement = document.createElement('div')
