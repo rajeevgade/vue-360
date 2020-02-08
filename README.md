@@ -1,4 +1,4 @@
-# vue-360-viewer
+# vue-360
 - A Simple and Beautiful 360&deg; Product Viewer built on Vue.js
 
 ## Demo
@@ -10,13 +10,13 @@
 
 ## Installation
 ```
-npm install vue-360-viewer
+npm install vue-360
 ```
 
 ## Config
 
 ```
-import VueThreeSixty from 'vue-360-viewer'
+import VueThreeSixty from 'vue-360'
 
 Vue.use(VueThreeSixty)
 
@@ -59,9 +59,9 @@ Vue.use(VueThreeSixty)
 - Custom Buttons
 - And a few more ...
 
-## Dependencies
+## Credits
 
-- vue
-- vue2-hammer
-- core-js
-- Images Credits: [Cloud Image](https://www.cloudimage.io/)
+- [vue](https://vuejs.org/)
+- [vue2-hammer](https://hammerjs.github.io/)
+- [core-js](https://github.com/zloirock/core-js)
+- [Cloud Image](https://www.cloudimage.io/)
