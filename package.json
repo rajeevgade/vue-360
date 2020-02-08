@@ -1,12 +1,12 @@
 {
-  "name": "@rajeevgade/vue-360-viewer",
+  "name": "vue-360",
   "version": "1.0.5",
   "author": {
     "name": "Rajeev R. Gade",
     "email": "rajeevgade@gmail.com"
   },
   "description": "A Simple and Beautiful 360 viewer for your product",
-  "repository": "rajeevgade/vue-360-viewer",
+  "repository": "rajeevgade/vue-360",
   "homepage": "https://rajeevgade.github.io/portfolio/vue-360-viewer/",
   "license": "MIT",
   "main": "./dist/index.js",
