@@ -4,7 +4,6 @@
     Author     : Rajeev R. Gade
     Description: Stylesheet for 360 viewer
 */
-
 body,
 html {
     width: 100%;
@@ -120,10 +119,10 @@ root {
 .v360-fullscreen-toggle:hover {
     fill: #000;
 }
-
+/* 
 .v360-fullscreen-toggle div:last-child {
     display: none;
-}
+} */
 
 .v360-fullscreen {
     z-index: 9999;
@@ -166,7 +165,7 @@ root {
     width: 100%;
     padding: 5px 0;
     text-align: center;
-    position: absolute;
+    /* position: absolute; */
     bottom: 0;
     display: flex;
     justify-content: center;
@@ -229,7 +228,7 @@ root {
     filter: alpha(opacity=50);
     /* opacity: 0.5; */
     cursor: default;
-    pointer-events: none;
+    /* pointer-events: none; */
 }
 
 #v360-image-container {

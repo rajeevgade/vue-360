@@ -18,8 +18,9 @@ npm install vue-360
 ```
 import VueThreeSixty from 'vue-360'
 
-Vue.use(VueThreeSixty)
+import 'vue-360/dist/css/style.css'
 
+Vue.use(VueThreeSixty)
 ```
 
 ## Example

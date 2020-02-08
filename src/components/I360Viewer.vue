@@ -1,17 +1,20 @@
 <template>
     <div>
-        <div class="v360-viewer-container" ref="imageLibrary" :id="identifier">
+        <!-- 360 Viewer Container -->
+        <div class="v360-viewer-container" ref="viewerContainer" :id="identifier">
             
-            <div class="v360-header" v-if="header" :class="(buttonClass == 'dark') ? 'text-light bg-dark' : 'text-dark bg-light'">
-                <span class="v360-header-title">{{ header }}</span>
-                <span class="v360-header-description"></span>
-            </div>
-
+            <!-- 360 Viewer Header -->
+            <slot name="header"></slot>
+            <!--/ 360 Viewer Header -->
+            
+            <!-- Percentage Loader -->
             <div class="v360-viewport" v-if="!imagesLoaded">
                 <div class="v360-spinner-grow"></div>
                 <p ref="viewPercentage" class="v360-percentage-text"></p>
             </div>
+            <!--/ Percentage Loader -->
 
+            <!-- 360 viewport -->
             <div class="v360-viewport" ref="viewport">
                 <canvas 
                     class="v360-image-container" 
@@ -30,18 +33,19 @@
                     v-hammer:pinchin="onPinchIn"
                 ></div>
             </div>
+            <!--/ 360 viewport -->
 
+            <!-- Fullscreen Button -->
             <abbr title="Fullscreen Toggle">
                 <div class="v360-fullscreen-toggle text-center" @click="toggleFullScreen">
-                    <div class="v360-fullscreen-toggle-btn" ref="enterFullScreenIcon">
-                        <i class="fas fa-expand text-lg" :class="(buttonClass == 'dark') ? 'text-light' : 'text-dark'"></i>
-                    </div>
-                    <div class="v360-fullscreen-toggle-btn" ref="leaveFullScreenIcon">
-                         <i class="fas fa-compress text-lg" :class="(buttonClass == 'dark') ? 'text-light' : 'text-dark'"></i>
+                    <div class="v360-fullscreen-toggle-btn" :class="(buttonClass == 'dark') ? 'text-light' : 'text-dark'">
+                        <i :class="(!isFullScreen) ? 'fas fa-expand text-lg' : 'fas fa-compress text-lg'"></i>
                     </div>
                 </div>
             </abbr>
+            <!--/ Fullscreen Button -->
 
+            <!-- Buttons Container -->
             <div id="v360-menu-btns" :class="buttonClass">
                 <div class="v360-navigate-btns">
                     <div class="v360-menu-btns" @click="togglePlay" :class="(playing) ? 'v360-btn-active' : ''">
@@ -65,12 +69,14 @@
                         <i class="fa fa-chevron-right"></i>
                     </div>
                     <div class="v360-menu-btns" @click="resetPosition">
-                        <i class="fa fa-redo-alt"></i>
+                        <i class="fa fa-sync"></i>
                     </div>
                 </div>
             </div>
+            <!--/ Buttons Container -->
 
         </div>
+        <!--/ 360 Viewer Container -->
     </div>
 </template>
 
@@ -89,10 +95,6 @@ export default {
             type: String,
             require: true,
             default: ''
-        },
-        header: {
-            type: String,
-            require: false,
         },
         spinReverse: {
             type: Boolean,
@@ -190,18 +192,16 @@ export default {
         isFullScreen(value){
             if(!value){
                 //exit full screen
-                /* this.$refs.imageLibrary.classList.add('v360-main')
-                this.$refs.imageLibrary.classList.add('v360-fullscreen') */
-                this.exitFullScreen()
-                this.$refs.enterFullScreenIcon.style.display = 'block'
-                this.$refs.leaveFullScreenIcon.style.display = 'none'
+                this.$refs.viewerContainer.classList.remove('v360-main')
+                this.$refs.viewerContainer.classList.remove('v360-fullscreen')
+                /* this.$refs.enterFullScreenIcon.style.display = 'block'
+                this.$refs.leaveFullScreenIcon.style.display = 'none' */
             }else{
                 //enter full screen
-                this.openFullScreen(this.$refs.imageLibrary)
-                /* this.$refs.imageLibrary.classList.remove('v360-main')
-                this.$refs.imageLibrary.classList.remove('v360-fullscreen') */
-                this.$refs.enterFullScreenIcon.style.display = 'none'
-                this.$refs.leaveFullScreenIcon.style.display = 'block'
+                this.$refs.viewerContainer.classList.add('v360-main')
+                this.$refs.viewerContainer.classList.add('v360-fullscreen')
+                /* this.$refs.enterFullScreenIcon.style.display = 'none'
+                this.$refs.leaveFullScreenIcon.style.display = 'block' */
                 
             }
             this.setImage()
@@ -788,35 +788,8 @@ export default {
             
         },
         toggleFullScreen(){
-            console.log(`this.isFullScreen: ${this.isFullScreen}`)
-
             this.isFullScreen = !this.isFullScreen
         },
-        openFullScreen(elem){
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
-            } else if (elem.mozRequestFullScreen) { /* Firefox */
-                elem.mozRequestFullScreen();
-            } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
-                elem.webkitRequestFullscreen();
-            } else if (elem.msRequestFullscreen) { /* IE/Edge */
-                elem.msRequestFullscreen();
-            }
-        },
-        exitFullScreen() {
-            if (document.exitFullScreen) return document.exitFullScreen();
-            else if (document.webkitExitFullscreen) return document.webkitExitFullscreen();
-            else if (document.msExitFullscreen) return document.msExitFullscreen();
-            else if (document.mozCancelFullScreen) return document.mozCancelFullScreen();
-        },
-        exitHandler() {
-            if (!document.fullscreenElement && !document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement) {
-                ///fire your event
-                this.isFullScreen = false
-            }
-        }  
     }
 }
 </script>
-
-<style scoped src="../../public/css/style.css"></style>
