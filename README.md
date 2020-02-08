@@ -31,7 +31,17 @@ Vue.use(VueThreeSixty)
   fileName="chair_{index}.jpg?v1"
 />
 ```
+### Adding a Header
+```
+<template v-slot:header>
+  <div class="v360-header text-light bg-dark">
+      <span class="v360-header-title">36 Images - Autoplay (1 loop) - Reverse Spin</span>
+      <span class="v360-header-description"></span>
+  </div>
+</template>
+```
 
+### Icons
 - The icons used in the demo are from fontawesome. Add the following in your header to display the icons.
 ```
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet" type="text/css">
@@ -45,11 +55,22 @@ Vue.use(VueThreeSixty)
 | imagePath | String | Path to your image | Yes |
 | fileName | String | File name format | Yes |
 | spinReverse | Boolean | Reverse Spin | Optional | false |
-| header | Boolean | Show/Hide Header | Optional | false |
 | autoplay | Number | Autoplay your images | Optional | 24 |
 | loop | Number | Number of loops you want to autoplay | Optional | 1 |
 | boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
 | buttonClass | String | Apply Styling to Buttons | Optional (light/dark) | light |
+
+## Buttons 
+
+(In order from left to right)
+
+- Play/Pause
+- Zoom In
+- Zoom Out
+- Pan / 360&deg; Mode
+- Move Left
+- Move Right
+- Reset Position
 
 
 ## Roadmap
