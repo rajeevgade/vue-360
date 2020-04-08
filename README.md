@@ -7,6 +7,18 @@
 
 [Click Here for Demo](http://rajeevgade.github.io/portfolio/vue-360-viewer)
 
+## Features
+
+- 360&deg; View
+- Zoom
+- Pan
+- Autoplay (Loops)
+- Full Screen Mode
+- Spin Direction
+- Image Caching
+- Mobile Responsive
+- Touch Events
+
 
 ## Installation
 ```
