@@ -59,7 +59,6 @@ Vue.use(VueThreeSixty)
 | loop | Number | Number of loops you want to autoplay | Optional | 1 |
 | boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
 | buttonClass | String | Apply Styling to Buttons | Optional (light/dark) | light |
-| paddingIndex | Boolean | Apply Leading Zero to Image Index | Optional | false |
 
 ## Buttons 
 

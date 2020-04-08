@@ -135,6 +135,11 @@ export default {
             type: String,
             require: true,
             default: () => uuidv1()
+        },
+        paddingIndex: {
+            type: Boolean,
+            require: false,
+            default: false
         }
     },
     data(){
@@ -238,13 +243,22 @@ export default {
         fetchData(){
 
             for(let i=1; i <= this.amount; i++){
-                const fileName = this.fileName.replace('{index}', i);
+                const imageIndex = (this.paddingIndex) ? this.lpad(i, "0", 2) : i
+                const fileName = this.fileName.replace('{index}', imageIndex);
                 const filePath = `${this.imagePath}/${fileName}`
                 this.imageData.push(filePath)
             }
 
             this.preloadImages()
         },
+
+        lpad(str, padString, length) {
+            str = str.toString()
+
+            while (str.length < length) str = padString + str
+            return str
+        },
+
         preloadImages(){
             if (this.imageData.length) {
                 try {
