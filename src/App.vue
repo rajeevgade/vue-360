@@ -39,7 +39,14 @@
             imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
             fileName="chair_{index}.jpg?v1"
             buttonClass="dark"
-          />
+          >
+            <template v-slot:header>
+              <div class="v360-header text-light bg-dark">
+                  <span class="v360-header-title">36 Images</span>
+                  <span class="v360-header-description"></span>
+              </div>
+            </template>
+          </vue-three-sixty>
         </div>
         <!--/ Example 2 - Chair - 36 images -->
 
