@@ -5,7 +5,7 @@
 
 ![Preview](https://www.techsolate.com/vue-360-viewer/demo.gif)
 
-[Demo](http://rajeevgade.github.io/portfolio/vue-360-viewer) | [Documentation](https://rajeevgade.github.io/vue-360)
+[Demo](https://vue-360.now.sh/) | [Documentation](https://rajeevgade.github.io/vue-360)
 
 ## Features
 

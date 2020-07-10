@@ -1,5 +1,5 @@
 {
-  "name": "vue-360",
+  "name": "@rajeevgade/vue-360",
   "version": "0.1.1",
   "author": {
     "name": "Rajeev R. Gade",
@@ -7,10 +7,13 @@
   },
   "description": "A Simple and Beautiful 360 viewer for your product",
   "repository": "rajeevgade/vue-360",
-  "homepage": "https://rajeevgade.github.io/portfolio/vue-360-viewer/",
+  "homepage": "https://vue-360.now.sh/",
   "license": "MIT",
   "main": "./dist/index.js",
   "private": false,
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/rajeevgade"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
