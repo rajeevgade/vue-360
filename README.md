@@ -1,6 +1,8 @@
 # vue-360
 - A Simple and Beautiful 360&deg; Product Viewer built on Vue.js
 
+### [Click here for React Version](https://github.com/rajeevgade/react-360)
+
 ## Demo
 
 ![Preview](https://www.techsolate.com/vue-360-viewer/demo.gif)
