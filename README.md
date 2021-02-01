@@ -74,6 +74,7 @@ Vue.use(VueThreeSixty)
 | boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
 | buttonClass | String | Apply Styling to Buttons | Optional (light/dark) | light |
 | paddingIndex | Boolean | Apply Leading Zero to Image Index | Optional | false |
+| disableZoom | Boolean | Disable Zoom Functionality | Optional | false |
 
 ## Buttons 
 

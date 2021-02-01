@@ -52,10 +52,10 @@
                         <i class="fa fa-play" v-if="!playing"></i>
                         <i class="fa fa-pause" v-else></i>
                     </div>
-                    <div class="v360-menu-btns" @click="zoomIn">
+                    <div class="v360-menu-btns" @click="zoomIn" v-if="!disableZoom">
                         <i class="fa fa-search-plus"></i>
                     </div>
-                    <div class="v360-menu-btns" @click="zoomOut">
+                    <div class="v360-menu-btns" @click="zoomOut" v-if="!disableZoom">
                         <i class="fa fa-search-minus"></i>
                     </div>
                     <div class="v360-menu-btns" @click="togglePanMode" :class="(panmode) ? 'v360-btn-active' : ''">
@@ -137,6 +137,11 @@ export default {
             default: () => uuidv1()
         },
         paddingIndex: {
+            type: Boolean,
+            require: false,
+            default: false
+        },
+        disableZoom: {
             type: Boolean,
             require: false,
             default: false
@@ -428,11 +433,15 @@ export default {
             this.panmode = !this.panmode
         },
         zoomIn(evt) {
+            if(this.disableZoom) return;
+
             this.lastX = this.centerX;
             this.lastY = this.centerY
             this.zoom(2)
         },
         zoomOut(evt) {
+            if(this.disableZoom) return;
+            
             this.lastX = this.centerX;
             this.lastY = this.centerY
             this.zoom(-2)
@@ -731,6 +740,8 @@ export default {
             }
         },
         zoomImage(evt){
+            if(this.disableZoom) return;
+
             this.lastX = evt.offsetX || (evt.pageX - this.canvas.offsetLeft);
             this.lastY = evt.offsetY || (evt.pageY - this.canvas.offsetTop);
             

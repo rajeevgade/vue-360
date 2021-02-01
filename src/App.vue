@@ -28,7 +28,7 @@
           <h4>More Examples</h4>
           <p>A simple, interactive resource that can be used to provide a virtual tour of your product.</p>
           <p>100% Mobile Responsive with Touch Actions</p>
-          <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Reverse Spin, Show/Hide Header, and more. <a href="https://github.com/rajeevgade/vue-360-viewer">Click here for more information.</a> </p>
+          <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Reverse Spin, Show/Hide Header, and more. <a href="https://github.com/rajeevgade/vue-360">Click here for more information.</a> </p>
         </div>
 
         <!-- Example 2 - Chair - 36 images -->
