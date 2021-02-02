@@ -75,7 +75,7 @@ Vue.use(VueThreeSixty)
 | buttonClass | String | Apply Styling to Buttons | Optional (light/dark) | light |
 | paddingIndex | Boolean | Apply Leading Zero to Image Index | Optional | false |
 | disableZoom | Boolean | Disable Zoom Functionality | Optional | false |
-| onScroll | Enum | Functionality on scroll event - only works if zoom is enabled | Optional (zoom - 0, rotate -1) | 0 |
+| scrollImage | Boolean | Scroll Images instead of Default Zoom | Optional | false |
 
 ## Buttons 
 

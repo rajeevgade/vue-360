@@ -12,6 +12,7 @@
             spinReverse
             autoplay
             buttonClass="dark"
+            scrollImage
           >
             <template v-slot:header>
               <div class="v360-header text-light bg-dark">

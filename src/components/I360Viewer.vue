@@ -18,15 +18,14 @@
             <div class="v360-viewport" ref="viewport">
                 <canvas 
                     class="v360-image-container" 
-                    ref="imageContainer" 
-                    @wheel="zoomImage"
+                    ref="imageContainer"
                     v-hammer:pinch="onPinch"
                     v-hammer:pinchend="onPinch"
                     v-hammer:pinchout="onPinchOut"
                     v-hammer:pinchin="onPinchIn"
                 ></canvas>
                 <div class="v360-product-box-shadow" 
-                    v-if="boxShadow" @wheel="zoomImage"
+                    v-if="boxShadow"
                     v-hammer:pinch="onPinch"
                     v-hammer:pinchend="onPinch"
                     v-hammer:pinchout="onPinchOut"
@@ -142,6 +141,11 @@ export default {
             default: false
         },
         disableZoom: {
+            type: Boolean,
+            require: false,
+            default: false
+        },
+        scrollImage: {
             type: Boolean,
             require: false,
             default: false
@@ -411,6 +415,8 @@ export default {
             this.$refs.viewport.addEventListener('mouseup', this.stopDragging);
             this.$refs.viewport.addEventListener('mousedown', this.startDragging);
             this.$refs.viewport.addEventListener('mousemove', this.doDragging);
+
+            this.$refs.viewport.addEventListener('wheel', this.onScroll);
         },
         bind360ModeEvents(){
             this.$refs.viewport.removeEventListener('touchend', this.stopDragging);
@@ -428,6 +434,8 @@ export default {
             this.$refs.viewport.addEventListener('mouseup', this.stopMoving);
             this.$refs.viewport.addEventListener('mousedown', this.startMoving);
             this.$refs.viewport.addEventListener('mousemove', this.doMoving);
+
+            this.$refs.viewport.addEventListener('wheel', this.onScroll);
         },
         togglePanMode(){
             this.panmode = !this.panmode
@@ -610,12 +618,26 @@ export default {
         },
         startMoving(evt){
             this.movement = true
-            this.movementStart = event.pageX;
+            this.movementStart = evt.pageX;
             this.$refs.viewport.style.cursor = 'grabbing';
         },
         doMoving(evt){
             if(this.movement){
                 this.onMove(evt.clientX)
+            }
+        },
+        onScroll(evt){
+            evt.preventDefault(); 
+
+            if(this.disableZoom || this.scrollImage){
+                if(evt.deltaY < 0){
+                    this.moveActiveIndexDown(1);
+                }else{
+                    this.moveActiveIndexUp(1);
+                }
+                this.onMove(evt.scrollTop);
+            }else{
+                this.zoomImage(evt);
             }
         },
         moveActiveIndexUp(itemsSkipped) {
