@@ -45,7 +45,7 @@
             <!--/ Fullscreen Button -->
 
             <!-- Buttons Container -->
-            <div id="v360-menu-btns" :class="buttonClass">
+            <div id="v360-menu-btns" :class="buttonClass" v-show="!hideAllButtons">
                 <div class="v360-navigate-btns">
                     <div class="v360-menu-btns" @click="togglePlay" :class="(playing) ? 'v360-btn-active' : ''">
                         <i class="fa fa-play" v-if="!playing"></i>
@@ -115,6 +115,11 @@ export default {
             require: false,
             default: 1
         },
+        stopLoopAtIndex: {
+            type: Number,
+            require: false,
+            default: 1
+        },
         boxShadow: {
             type: Boolean,
             require: false,
@@ -124,6 +129,11 @@ export default {
             type: String,
             require: false,
             default: 'light'
+        },
+        hideAllButtons: {
+            type: Boolean,
+            require: false,
+            default: false
         },
         hotspots: {
             type: Array,
@@ -149,6 +159,11 @@ export default {
             type: Boolean,
             require: false,
             default: false
+        },
+        draggingDirection: {
+            type: String,
+            require: false,
+            default: 'horizontal'
         }
     },
     data(){
@@ -325,6 +340,7 @@ export default {
             this.playing = !this.playing
         },
         play(){
+            this.activeImage = 1;
             this.loopTimeoutId = window.setInterval(() => this.loopImages(), 100);
         },
         onSpin() {
@@ -333,26 +349,22 @@ export default {
             }
         },
         stop() {
-            if(this.activeImage == 1){
+            if(this.activeImage == this.stopLoopAtIndex){
                 this.currentLoop = 0
             }
             this.playing = false;
             window.clearTimeout(this.loopTimeoutId);
         },
         loopImages() {
-            if(this.activeImage == 1){
-                if(this.currentLoop == this.loop){
-                    this.stop()
-                }
-                else{
-                    this.currentLoop++
-                    
-                    this.next()
-                }
+            if (this.activeImage == this.stopLoopAtIndex && this.currentLoop == this.loop) {
+                this.stop()
+                return
             }
-            else{
-                this.next()
+            if (this.activeImage == 1) {
+                this.currentLoop++
             }
+
+            this.next()
         },
         next() {
             (this.spinReverse) ? this.turnLeft() : this.turnRight()
@@ -623,7 +635,11 @@ export default {
         },
         doMoving(evt){
             if(this.movement){
-                this.onMove(evt.clientX)
+                if (this.draggingDirection == 'horizontal') {
+                  this.onMove(evt.clientX)
+                } else {
+                  this.onMove(evt.clientY)
+                }
             }
         },
         onScroll(evt){
