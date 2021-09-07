@@ -599,11 +599,11 @@ export default {
             if(hotspotButtons.length)
                 hotspotButtons.forEach(element => element.remove())
         },
-        onMove(pageX){
-            if (pageX - this.movementStart >= this.speedFactor) {
-                let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
+        onMove(pageDirection){
+            if (pageDirection - this.movementStart >= this.speedFactor) {
+                let itemsSkippedRight = Math.floor((pageDirection - this.movementStart) / this.speedFactor) || 1;
                 
-                this.movementStart = pageX;
+                this.movementStart = pageDirection;
 
                 if (this.spinReverse) {
                     this.moveActiveIndexDown(itemsSkippedRight);
@@ -613,11 +613,11 @@ export default {
 
                 this.redraw();
 
-            } else if (this.movementStart - pageX >= this.speedFactor) {
+            } else if (this.movementStart - pageDirection >= this.speedFactor) {
 
-                let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+                let itemsSkippedLeft = Math.floor((this.movementStart - pageDirection) / this.speedFactor) || 1;
                 
-                this.movementStart = pageX;
+                this.movementStart = pageDirection;
 
                 if (this.spinReverse) {
                     this.moveActiveIndexUp(itemsSkippedLeft);
@@ -630,7 +630,11 @@ export default {
         },
         startMoving(evt){
             this.movement = true
-            this.movementStart = evt.pageX;
+            if (this.draggingDirection == 'horizontal') {
+              this.movementStart = evt.pageX;
+            } else {
+              this.movementStart = evt.pageY;
+            }
             this.$refs.viewport.style.cursor = 'grabbing';
         },
         doMoving(evt){
@@ -701,10 +705,18 @@ export default {
             this.$refs.viewport.style.cursor = 'grab'
         },
         touchStart(evt){
-            this.movementStart = evt.touches[0].clientX
+            if (this.draggingDirection == 'horizontal') {
+              this.movementStart = evt.touches[0].clientX
+            } else {
+              this.movementStart = evt.touches[0].clientY
+            }
         },
         touchMove(evt){
+          if (this.draggingDirection == 'horizontal') {
             this.onMove(evt.touches[0].clientX)
+          } else {
+            this.onMove(evt.touches[0].clientY)
+          }
         },
         touchEnd(){
             this.movementStart = 0
