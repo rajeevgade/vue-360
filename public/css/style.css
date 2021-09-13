@@ -4,17 +4,6 @@
     Author     : Rajeev R. Gade
     Description: Stylesheet for 360 viewer
 */
-body,
-html {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    font-family: sans-serif;
-}
-
-root {
-    display: block;
-}
 
 .v360-main {
     width: 100%;

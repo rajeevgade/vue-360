@@ -160,6 +160,11 @@ export default {
             require: false,
             default: false
         },
+        disableScrolling: {
+            type: Boolean,
+            require: false,
+            default: false
+        },
         draggingDirection: {
             type: String,
             require: false,
@@ -630,16 +635,17 @@ export default {
         },
         startMoving(evt){
             this.movement = true
-            if (this.draggingDirection == 'horizontal') {
+            if (this.draggingDirection === 'horizontal') {
               this.movementStart = evt.pageX;
+              this.$refs.viewport.style.cursor = 'e-resize';
             } else {
               this.movementStart = evt.pageY;
+              this.$refs.viewport.style.cursor = 'n-resize';
             }
-            this.$refs.viewport.style.cursor = 'grabbing';
         },
         doMoving(evt){
             if(this.movement){
-                if (this.draggingDirection == 'horizontal') {
+                if (this.draggingDirection === 'horizontal') {
                   this.onMove(evt.clientX)
                 } else {
                   this.onMove(evt.clientY)
@@ -647,18 +653,21 @@ export default {
             }
         },
         onScroll(evt){
-            evt.preventDefault(); 
+            evt.preventDefault();
 
-            if(this.disableZoom || this.scrollImage){
-                if(evt.deltaY < 0){
+            if (!this.disableScrolling) {
+                if(this.disableZoom || this.scrollImage){
+                  if(evt.deltaY < 0){
                     this.moveActiveIndexDown(1);
-                }else{
+                  }else{
                     this.moveActiveIndexUp(1);
+                  }
+                  this.onMove(evt.scrollTop);
+                }else{
+                  this.zoomImage(evt);
                 }
-                this.onMove(evt.scrollTop);
-            }else{
-                this.zoomImage(evt);
             }
+
         },
         moveActiveIndexUp(itemsSkipped) {
 
@@ -702,7 +711,6 @@ export default {
         stopMoving(evt){
             this.movement = false
             this.movementStart = 0
-            this.$refs.viewport.style.cursor = 'grab'
         },
         touchStart(evt){
             if (this.draggingDirection == 'horizontal') {
