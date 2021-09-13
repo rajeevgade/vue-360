@@ -339,6 +339,11 @@ export default {
         },
         onAllImagesLoaded(e){
             this.imagesLoaded = true
+            if (this.draggingDirection === 'horizontal') {
+                this.$refs.viewport.style.cursor = 'e-resize';
+            } else {
+                this.$refs.viewport.style.cursor = 'n-resize';
+            }
             this.initData()
         },
         togglePlay(){
