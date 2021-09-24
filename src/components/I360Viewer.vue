@@ -632,7 +632,7 @@ export default {
             }
         },
         onScroll(evt){
-            if (this.disableScrollWheel) {
+            if (!this.disableScrollWheel) {
                 evt.preventDefault(); 
     
                 if(this.disableZoom || this.scrollImage){
