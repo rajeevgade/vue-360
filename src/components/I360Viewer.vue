@@ -140,6 +140,11 @@ export default {
             require: false,
             default: false
         },
+        disableScrollWheel: {
+            type: Boolean,
+            require: false,
+            default: false
+        },
         disableZoom: {
             type: Boolean,
             require: false,
@@ -627,17 +632,19 @@ export default {
             }
         },
         onScroll(evt){
-            evt.preventDefault(); 
-
-            if(this.disableZoom || this.scrollImage){
-                if(evt.deltaY < 0){
-                    this.moveActiveIndexDown(1);
+            if (this.disableScrollWheel) {
+                evt.preventDefault(); 
+    
+                if(this.disableZoom || this.scrollImage){
+                    if(evt.deltaY < 0){
+                        this.moveActiveIndexDown(1);
+                    }else{
+                        this.moveActiveIndexUp(1);
+                    }
+                    this.onMove(evt.scrollTop);
                 }else{
-                    this.moveActiveIndexUp(1);
+                    this.zoomImage(evt);
                 }
-                this.onMove(evt.scrollTop);
-            }else{
-                this.zoomImage(evt);
             }
         },
         moveActiveIndexUp(itemsSkipped) {
