@@ -32,7 +32,7 @@
           <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Reverse Spin, Show/Hide Header, and more. <a href="https://github.com/rajeevgade/vue-360">Click here for more information.</a> </p>
         </div>
 
-        <!-- Example 2 - Chair - 36 images -->
+        <!-- Example 2 - Phone - 36 images -->
         <div class="col-12 col-md-6 mb-4 card p-0">
           <!-- <h4 class="my-2 text-center">36 Images</h4> -->
           <vue-three-sixty 
@@ -49,15 +49,15 @@
             </template>
           </vue-three-sixty>
         </div>
-        <!--/ Example 2 - Chair - 36 images -->
+        <!--/ Example 2 - Phone - 36 images -->
 
-        <!-- Example 3 - Chair - 36 images -->
+        <!-- Example 3 - Earbuds - 233 images -->
         <div class="col-12 col-md-6 mb-4 card p-0">
           <!-- <h4 class="my-2 text-center">72 Images - Box Shadow</h4> -->
           <vue-three-sixty
-            :amount=72
-            imagePath="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile"
-            fileName="product-{index}.jpg"
+            :amount=233
+            imagePath="https://scaleflex.cloudimg.io/v7/demo/earbuds"
+            fileName="{index}.jpg"
             boxShadow
           >
             <template v-slot:header>
@@ -68,7 +68,7 @@
             </template>
           </vue-three-sixty>
         </div>
-        <!--/ Example 3 - Chair - 72 images -->
+        <!--/ Example 3 - Earbuds - 233 images -->
 
       </div>
     </div>
