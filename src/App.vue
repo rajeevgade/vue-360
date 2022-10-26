@@ -7,8 +7,8 @@
         <div class="col-12 mb-4 card p-0">
           <vue-three-sixty 
             :amount=36
-            imagePath="https://scaleflex.cloudimg.io/crop/1920x700/n/https://scaleflex.airstore.io/demo/360-car"
-            fileName="iris-{index}.jpeg"
+            imagePath="https://scaleflex.cloudimg.io/v7/demo/suv-orange-car-360"
+            fileName="orange-{index}.jpg"
             spinReverse
             autoplay
             buttonClass="dark"
@@ -32,13 +32,13 @@
           <p>Features include Zoom, Pan, Autoplay, Loop, Crop, Reverse Spin, Show/Hide Header, and more. <a href="https://github.com/rajeevgade/vue-360">Click here for more information.</a> </p>
         </div>
 
-        <!-- Example 2 - Chair - 36 images -->
+        <!-- Example 2 - Phone - 36 images -->
         <div class="col-12 col-md-6 mb-4 card p-0">
           <!-- <h4 class="my-2 text-center">36 Images</h4> -->
           <vue-three-sixty 
             :amount=36
-            imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-36"
-            fileName="chair_{index}.jpg?v1"
+            imagePath="https://scaleflex.cloudimg.io/v7/demo/vivo-mobile"
+            fileName="product-{index}.jpg"
             buttonClass="dark"
           >
             <template v-slot:header>
@@ -49,15 +49,15 @@
             </template>
           </vue-three-sixty>
         </div>
-        <!--/ Example 2 - Chair - 36 images -->
+        <!--/ Example 2 - Phone - 36 images -->
 
-        <!-- Example 3 - Chair - 36 images -->
+        <!-- Example 3 - Earbuds - 233 images -->
         <div class="col-12 col-md-6 mb-4 card p-0">
           <!-- <h4 class="my-2 text-center">72 Images - Box Shadow</h4> -->
           <vue-three-sixty
-            :amount=72
-            imagePath="https://scaleflex.cloudimg.io/width/600/q35/https://scaleflex.ultrafast.io/https://scaleflex.airstore.io/demo/chair-360-72"
-            fileName="chair_{index}.jpg?v1"
+            :amount=233
+            imagePath="https://scaleflex.cloudimg.io/v7/demo/earbuds"
+            fileName="{index}.jpg"
             boxShadow
           >
             <template v-slot:header>
@@ -68,7 +68,7 @@
             </template>
           </vue-three-sixty>
         </div>
-        <!--/ Example 3 - Chair - 72 images -->
+        <!--/ Example 3 - Earbuds - 233 images -->
 
       </div>
     </div>
