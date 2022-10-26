@@ -71,11 +71,14 @@ Vue.use(VueThreeSixty)
 | spinReverse | Boolean | Reverse Spin | Optional | false |
 | autoplay | Number | Autoplay your images | Optional | 24 |
 | loop | Number | Number of loops you want to autoplay | Optional | 1 |
+| stopLoopAtIndex | Number | Number of images you want to autoplay in the last loop | Optional | 1 |
 | boxShadow | Boolean | Apply Box Shadow Background | Optional | false |
 | buttonClass | String | Apply Styling to Buttons | Optional (light/dark) | light |
+| hideAllButtons | Boolean | Hides all Buttons | Optional | false |
 | paddingIndex | Boolean | Apply Leading Zero to Image Index | Optional | false |
 | disableZoom | Boolean | Disable Zoom Functionality | Optional | false |
 | scrollImage | Boolean | Scroll Images instead of Default Zoom | Optional | false |
+| draggingDirection | String | Set's the dragging direction to horizontal or vertical | Optional | horizontal |
 
 ## Buttons 
 

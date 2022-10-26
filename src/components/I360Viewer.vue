@@ -45,7 +45,7 @@
             <!--/ Fullscreen Button -->
 
             <!-- Buttons Container -->
-            <div id="v360-menu-btns" :class="buttonClass">
+            <div id="v360-menu-btns" :class="buttonClass" v-show="!hideAllButtons">
                 <div class="v360-navigate-btns">
                     <div class="v360-menu-btns" @click="togglePlay" :class="(playing) ? 'v360-btn-active' : ''">
                         <i class="fa fa-play" v-if="!playing"></i>
@@ -115,6 +115,11 @@ export default {
             require: false,
             default: 1
         },
+        stopLoopAtIndex: {
+            type: Number,
+            require: false,
+            default: 1
+        },
         boxShadow: {
             type: Boolean,
             require: false,
@@ -124,6 +129,11 @@ export default {
             type: String,
             require: false,
             default: 'light'
+        },
+        hideAllButtons: {
+            type: Boolean,
+            require: false,
+            default: false
         },
         hotspots: {
             type: Array,
@@ -149,6 +159,16 @@ export default {
             type: Boolean,
             require: false,
             default: false
+        },
+        disableScrolling: {
+            type: Boolean,
+            require: false,
+            default: false
+        },
+        draggingDirection: {
+            type: String,
+            require: false,
+            default: 'horizontal'
         }
     },
     data(){
@@ -319,12 +339,18 @@ export default {
         },
         onAllImagesLoaded(e){
             this.imagesLoaded = true
+            if (this.draggingDirection === 'horizontal') {
+                this.$refs.viewport.style.cursor = 'e-resize';
+            } else {
+                this.$refs.viewport.style.cursor = 'n-resize';
+            }
             this.initData()
         },
         togglePlay(){
             this.playing = !this.playing
         },
         play(){
+            this.activeImage = 1;
             this.loopTimeoutId = window.setInterval(() => this.loopImages(), 100);
         },
         onSpin() {
@@ -333,26 +359,22 @@ export default {
             }
         },
         stop() {
-            if(this.activeImage == 1){
+            if(this.activeImage == this.stopLoopAtIndex){
                 this.currentLoop = 0
             }
             this.playing = false;
             window.clearTimeout(this.loopTimeoutId);
         },
         loopImages() {
-            if(this.activeImage == 1){
-                if(this.currentLoop == this.loop){
-                    this.stop()
-                }
-                else{
-                    this.currentLoop++
-                    
-                    this.next()
-                }
+            if (this.activeImage == this.stopLoopAtIndex && this.currentLoop == this.loop) {
+                this.stop()
+                return
             }
-            else{
-                this.next()
+            if (this.activeImage == 1) {
+                this.currentLoop++
             }
+
+            this.next()
         },
         next() {
             (this.spinReverse) ? this.turnLeft() : this.turnRight()
@@ -587,11 +609,11 @@ export default {
             if(hotspotButtons.length)
                 hotspotButtons.forEach(element => element.remove())
         },
-        onMove(pageX){
-            if (pageX - this.movementStart >= this.speedFactor) {
-                let itemsSkippedRight = Math.floor((pageX - this.movementStart) / this.speedFactor) || 1;
+        onMove(pageDirection){
+            if (pageDirection - this.movementStart >= this.speedFactor) {
+                let itemsSkippedRight = Math.floor((pageDirection - this.movementStart) / this.speedFactor) || 1;
                 
-                this.movementStart = pageX;
+                this.movementStart = pageDirection;
 
                 if (this.spinReverse) {
                     this.moveActiveIndexDown(itemsSkippedRight);
@@ -601,11 +623,11 @@ export default {
 
                 this.redraw();
 
-            } else if (this.movementStart - pageX >= this.speedFactor) {
+            } else if (this.movementStart - pageDirection >= this.speedFactor) {
 
-                let itemsSkippedLeft = Math.floor((this.movementStart - pageX) / this.speedFactor) || 1;
+                let itemsSkippedLeft = Math.floor((this.movementStart - pageDirection) / this.speedFactor) || 1;
                 
-                this.movementStart = pageX;
+                this.movementStart = pageDirection;
 
                 if (this.spinReverse) {
                     this.moveActiveIndexUp(itemsSkippedLeft);
@@ -618,27 +640,39 @@ export default {
         },
         startMoving(evt){
             this.movement = true
-            this.movementStart = evt.pageX;
-            this.$refs.viewport.style.cursor = 'grabbing';
+            if (this.draggingDirection === 'horizontal') {
+              this.movementStart = evt.pageX;
+              this.$refs.viewport.style.cursor = 'e-resize';
+            } else {
+              this.movementStart = evt.pageY;
+              this.$refs.viewport.style.cursor = 'n-resize';
+            }
         },
         doMoving(evt){
             if(this.movement){
-                this.onMove(evt.clientX)
+                if (this.draggingDirection === 'horizontal') {
+                  this.onMove(evt.clientX)
+                } else {
+                  this.onMove(evt.clientY)
+                }
             }
         },
         onScroll(evt){
-            evt.preventDefault(); 
+            evt.preventDefault();
 
-            if(this.disableZoom || this.scrollImage){
-                if(evt.deltaY < 0){
+            if (!this.disableScrolling) {
+                if(this.disableZoom || this.scrollImage){
+                  if(evt.deltaY < 0){
                     this.moveActiveIndexDown(1);
-                }else{
+                  }else{
                     this.moveActiveIndexUp(1);
+                  }
+                  this.onMove(evt.scrollTop);
+                }else{
+                  this.zoomImage(evt);
                 }
-                this.onMove(evt.scrollTop);
-            }else{
-                this.zoomImage(evt);
             }
+
         },
         moveActiveIndexUp(itemsSkipped) {
 
@@ -682,13 +716,20 @@ export default {
         stopMoving(evt){
             this.movement = false
             this.movementStart = 0
-            this.$refs.viewport.style.cursor = 'grab'
         },
         touchStart(evt){
-            this.movementStart = evt.touches[0].clientX
+            if (this.draggingDirection == 'horizontal') {
+              this.movementStart = evt.touches[0].clientX
+            } else {
+              this.movementStart = evt.touches[0].clientY
+            }
         },
         touchMove(evt){
+          if (this.draggingDirection == 'horizontal') {
             this.onMove(evt.touches[0].clientX)
+          } else {
+            this.onMove(evt.touches[0].clientY)
+          }
         },
         touchEnd(){
             this.movementStart = 0
