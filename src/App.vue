@@ -51,13 +51,13 @@
         </div>
         <!--/ Example 2 - Phone - 36 images -->
 
-        <!-- Example 3 - Earbuds - 233 images -->
+        <!-- Example 3 - Motorcycle - 36 images -->
         <div class="col-12 col-md-6 mb-4 card p-0">
           <!-- <h4 class="my-2 text-center">72 Images - Box Shadow</h4> -->
           <vue-three-sixty
             :amount=233
-            imagePath="https://scaleflex.cloudimg.io/v7/demo/earbuds"
-            fileName="{index}.jpg"
+            imagePath="https://scaleflex.cloudimg.io/v7/demo/jawa-motorcycle"
+            fileName="{index}.jpeg"
             boxShadow
           >
             <template v-slot:header>
@@ -68,7 +68,7 @@
             </template>
           </vue-three-sixty>
         </div>
-        <!--/ Example 3 - Earbuds - 233 images -->
+        <!--/ Example 3 - Motorcycle - 36 images -->
 
       </div>
     </div>

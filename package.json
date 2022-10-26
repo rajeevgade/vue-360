@@ -11,6 +11,9 @@
   "license": "MIT",
   "main": "./dist/index.js",
   "private": false,
+  "engines": {
+    "node": ">=13"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
